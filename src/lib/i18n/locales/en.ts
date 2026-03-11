@@ -52,4 +52,6 @@ export const en = {
   processingButton: "PROCESSING...",
   processingData: "PROCESSING DATA...",
   sysInfoPricing: "> SYS_INFO: Pricing sourced from public Cloud APIs. USD to BRL conversion (@{rate}) via open.er-api.com.",
+  mocked: "MOCK",
+  live: "LIVE",
 };

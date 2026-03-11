@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "@/lib/i18n/I18nContext"
 import type { InfrastructureProjections } from "@/types"
+import { PricingCard } from "./PricingCard"
+import { TuiBanner } from "@/components/ui/TuiBanner"
 
 interface CostEstimationProps {
   projections: InfrastructureProjections;
@@ -13,14 +15,15 @@ interface CostEstimationProps {
 interface PricingData {
   storage: number;
   egress: number;
+  isMocked: boolean;
 }
 
 export function CostEstimation({ projections, onLoadingChange, hideLoader = false }: CostEstimationProps) {
   const { t } = useTranslation();
-  const [awsPricing, setAwsPricing] = useState<PricingData>({ storage: 0, egress: 0 });
-  const [azurePricing, setAzurePricing] = useState<PricingData>({ storage: 0, egress: 0 });
-  const [gcpPricing, setGcpPricing] = useState<PricingData>({ storage: 0, egress: 0 });
-  const [oraclePricing, setOraclePricing] = useState<PricingData>({ storage: 0, egress: 0 });
+  const [awsPricing, setAwsPricing] = useState<PricingData>({ storage: 0, egress: 0, isMocked: true });
+  const [azurePricing, setAzurePricing] = useState<PricingData>({ storage: 0, egress: 0, isMocked: true });
+  const [gcpPricing, setGcpPricing] = useState<PricingData>({ storage: 0, egress: 0, isMocked: true });
+  const [oraclePricing, setOraclePricing] = useState<PricingData>({ storage: 0, egress: 0, isMocked: true });
   const [exchangeRate, setExchangeRate] = useState<number>(5.0);
   const [isLoading, setIsLoading] = useState(true);
   const [cacheTime, setCacheTime] = useState<string | null>(null);
@@ -37,10 +40,10 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
         if (cached) {
           const parsed = JSON.parse(cached);
           if (parsed.timestamp && (Date.now() - parsed.timestamp < CACHE_DURATION_MS)) {
-            setAwsPricing(parsed.aws);
-            setAzurePricing(parsed.azure);
-            setGcpPricing(parsed.gcp);
-            setOraclePricing(parsed.oracle);
+            setAwsPricing({ ...parsed.aws, isMocked: parsed.aws.isMocked ?? true });
+            setAzurePricing({ ...parsed.azure, isMocked: parsed.azure.isMocked ?? true });
+            setGcpPricing({ ...parsed.gcp, isMocked: parsed.gcp.isMocked ?? true });
+            setOraclePricing({ ...parsed.oracle, isMocked: parsed.oracle.isMocked ?? true });
             if (parsed.exchangeRate) setExchangeRate(parsed.exchangeRate);
             setCacheTime(new Date(parsed.timestamp).toLocaleString());
             setIsLoading(false);
@@ -66,21 +69,27 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
           fetch("https://open.er-api.com/v6/latest/USD").then(res => res.json()).catch(() => ({ rates: { BRL: 5.0 } }))
         ]);
 
+        const isMockedStatus = (status: string) => status !== "live";
+
         const newAws = {
           storage: awsStorageRes.pricePerGB || 0.023,
           egress: awsEgressRes.pricePerGB || 0.09,
+          isMocked: isMockedStatus(awsStorageRes.status || "mock"),
         };
         const newAzure = {
           storage: azureStorageRes.pricePerGB || 0.0184,
           egress: azureEgressRes.pricePerGB || 0.087,
+          isMocked: isMockedStatus(azureStorageRes.status || "mock"),
         };
         const newGcp = {
           storage: gcpStorageRes.pricePerGB || 0.020,
           egress: gcpEgressRes.pricePerGB || 0.085,
+          isMocked: isMockedStatus(gcpStorageRes.status || "mock"),
         };
         const newOracle = {
           storage: oracleStorageRes.pricePerGB || 0.0255,
           egress: oracleEgressRes.pricePerGB || 0.0085,
+          isMocked: isMockedStatus(oracleStorageRes.status || "mock"),
         };
 
         setAwsPricing(newAws);
@@ -135,121 +144,53 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
         )
       ) : (
         <>
-          <div className="mb-4 p-3 bg-black border border-primary border-dashed text-xl text-primary font-bold tracking-widest uppercase mt-4">
+          <TuiBanner>
             {t('sysInfoPricing', { rate: exchangeRate.toFixed(2) })}
-          </div>
+          </TuiBanner>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* AWS Card */}
-            <div className="p-4 bg-black border-2 border-orange-500 relative group uppercase">
-              <div className="absolute top-0 right-0 p-3 text-orange-500/20 font-bold text-4xl group-hover:text-orange-500/40 transition-colors pointer-events-none">
-                [AWS]
-              </div>
-              <p className="text-sm text-orange-500/70 font-bold tracking-widest mb-1">{t('awsDetails')}</p>
-              <div className="mb-4">
-                <p className="text-3xl font-black text-orange-500">
-                  ${totalAWS.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  <span className="text-sm font-bold text-orange-500/70 tracking-widest"> {t('mo')}</span>
-                </p>
-                <p className="text-lg font-bold text-orange-500/80">
-                  ~ R$ {(totalAWS * exchangeRate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
+            <PricingCard
+              providerCode="[AWS]"
+              providerTitle={t('awsDetails')}
+              totalUsd={totalAWS}
+              totalBrl={totalAWS * exchangeRate}
+              isMocked={awsPricing.isMocked}
+              storageCostUsd={projections.totalStorageGB * awsPricing.storage}
+              egressCostUsd={projections.totalEgressGB * awsPricing.egress}
+              themeColor="orange"
+            />
 
-              <div className="space-y-1 text-sm border-t-2 border-orange-500 border-dashed pt-3">
-                <div className="flex justify-between text-orange-500/90">
-                  <span className="tracking-widest">{t('storageCost')}</span>
-                  <span className="font-bold">${(projections.totalStorageGB * awsPricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-orange-500/90">
-                  <span className="tracking-widest">{t('dataEgress')}</span>
-                  <span className="font-bold">${(projections.totalEgressGB * awsPricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
+            <PricingCard
+              providerCode="[AZR]"
+              providerTitle={t('azureDetails')}
+              totalUsd={totalAzure}
+              totalBrl={totalAzure * exchangeRate}
+              isMocked={azurePricing.isMocked}
+              storageCostUsd={projections.totalStorageGB * azurePricing.storage}
+              egressCostUsd={projections.totalEgressGB * azurePricing.egress}
+              themeColor="blue"
+            />
 
-            {/* Azure Card */}
-            <div className="p-4 bg-black border-2 border-blue-500 relative group uppercase">
-              <div className="absolute top-0 right-0 p-3 text-blue-500/20 font-bold text-4xl group-hover:text-blue-500/40 transition-colors pointer-events-none">
-                [AZR]
-              </div>
-              <p className="text-sm text-blue-500/70 font-bold tracking-widest mb-1">{t('azureDetails')}</p>
-              <div className="mb-4">
-                <p className="text-3xl font-black text-blue-500">
-                  ${totalAzure.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  <span className="text-sm font-bold text-blue-500/70 tracking-widest"> {t('mo')}</span>
-                </p>
-                <p className="text-lg font-bold text-blue-500/80">
-                  ~ R$ {(totalAzure * exchangeRate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
+            <PricingCard
+              providerCode="[GCP]"
+              providerTitle={t('gcpDetails')}
+              totalUsd={totalGcp}
+              totalBrl={totalGcp * exchangeRate}
+              isMocked={gcpPricing.isMocked}
+              storageCostUsd={projections.totalStorageGB * gcpPricing.storage}
+              egressCostUsd={projections.totalEgressGB * gcpPricing.egress}
+              themeColor="green"
+            />
 
-              <div className="space-y-1 text-sm border-t-2 border-blue-500 border-dashed pt-3">
-                <div className="flex justify-between text-blue-500/90">
-                  <span className="tracking-widest">{t('storageCost')}</span>
-                  <span className="font-bold">${(projections.totalStorageGB * azurePricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-blue-500/90">
-                  <span className="tracking-widest">{t('dataEgress')}</span>
-                  <span className="font-bold">${(projections.totalEgressGB * azurePricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* GCP Card */}
-            <div className="p-4 bg-black border-2 border-green-500 relative group uppercase">
-              <div className="absolute top-0 right-0 p-3 text-green-500/20 font-bold text-4xl group-hover:text-green-500/40 transition-colors pointer-events-none">
-                [GCP]
-              </div>
-              <p className="text-sm text-green-500/70 font-bold tracking-widest mb-1">{t('gcpDetails')}</p>
-              <div className="mb-4">
-                <p className="text-3xl font-black text-green-500">
-                  ${totalGcp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  <span className="text-sm font-bold text-green-500/70 tracking-widest"> {t('mo')}</span>
-                </p>
-                <p className="text-lg font-bold text-green-500/80">
-                  ~ R$ {(totalGcp * exchangeRate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-
-              <div className="space-y-1 text-sm border-t-2 border-green-500 border-dashed pt-3">
-                <div className="flex justify-between text-green-500/90">
-                  <span className="tracking-widest">{t('storageCost')}</span>
-                  <span className="font-bold">${(projections.totalStorageGB * gcpPricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-green-500/90">
-                  <span className="tracking-widest">{t('dataEgress')}</span>
-                  <span className="font-bold">${(projections.totalEgressGB * gcpPricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Oracle Card */}
-            <div className="p-4 bg-black border-2 border-red-500 relative group uppercase">
-              <div className="absolute top-0 right-0 p-3 text-red-500/20 font-bold text-4xl group-hover:text-red-500/40 transition-colors pointer-events-none">
-                [OCI]
-              </div>
-              <p className="text-sm text-red-500/70 font-bold tracking-widest mb-1">{t('oracleDetails')}</p>
-              <div className="mb-4">
-                <p className="text-3xl font-black text-red-500">
-                  ${totalOracle.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  <span className="text-sm font-bold text-red-500/70 tracking-widest"> {t('mo')}</span>
-                </p>
-                <p className="text-lg font-bold text-red-500/80">
-                  ~ R$ {(totalOracle * exchangeRate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-
-              <div className="space-y-1 text-sm border-t-2 border-red-500 border-dashed pt-3">
-                <div className="flex justify-between text-red-500/90">
-                  <span className="tracking-widest">{t('storageCost')}</span>
-                  <span className="font-bold">${(projections.totalStorageGB * oraclePricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-red-500/90">
-                  <span className="tracking-widest">{t('dataEgress')}</span>
-                  <span className="font-bold">${(projections.totalEgressGB * oraclePricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
+            <PricingCard
+              providerCode="[OCI]"
+              providerTitle={t('oracleDetails')}
+              totalUsd={totalOracle}
+              totalBrl={totalOracle * exchangeRate}
+              isMocked={oraclePricing.isMocked}
+              storageCostUsd={projections.totalStorageGB * oraclePricing.storage}
+              egressCostUsd={projections.totalEgressGB * oraclePricing.egress}
+              themeColor="red"
+            />
           </div>
         </>
       )}

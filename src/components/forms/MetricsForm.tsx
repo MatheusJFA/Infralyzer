@@ -5,6 +5,7 @@ import { Minus, Plus } from 'lucide-react';
 import { useTranslation } from "@/lib/i18n/I18nContext";
 import { InfoTooltip } from "@/components/InfoTooltip";
 import type { BusinessMetrics } from '@/types';
+import { TuiFormGroup } from "@/components/ui/TuiFormGroup";
 
 interface MetricsFormProps {
   metrics: BusinessMetrics;
@@ -46,7 +47,7 @@ function MetricSlider({
   };
 
   return (
-    <div className="space-y-4 p-4 border border-primary/50 hover:border-primary rounded-none bg-black shadow-none transition-all">
+    <TuiFormGroup>
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2">
         <label className="text-sm font-semibold text-foreground tracking-tight flex items-center xl:max-w-[50%]" htmlFor={name}>
           <span className="break-words">{label}</span>
@@ -110,7 +111,7 @@ function MetricSlider({
           ))}
         </div>
       )}
-    </div>
+    </TuiFormGroup>
   );
 }
 

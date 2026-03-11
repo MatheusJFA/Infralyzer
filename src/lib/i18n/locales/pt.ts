@@ -54,4 +54,6 @@ export const pt: typeof en = {
   processingButton: "PROCESSANDO...",
   processingData: "PROCESSANDO DADOS...",
   sysInfoPricing: "> SYS_INFO: Valores originários das APIs públicas Cloud. Conversão de USD para BRL (@{rate}) via open.er-api.com.",
+  mocked: "MOCKADO",
+  live: "AO VIVO",
 };

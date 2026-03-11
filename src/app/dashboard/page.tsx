@@ -8,6 +8,10 @@ import { CostEstimation } from "@/components/charts/CostEstimation";
 import { InfoTooltip } from "@/components/InfoTooltip";
 import { calculateInfrastructure } from "@/lib/core/engine";
 import type { BusinessMetrics } from "@/types";
+import { TuiSection } from "@/components/ui/TuiSection";
+import { TuiDataBox } from "@/components/ui/TuiDataBox";
+import { TuiButton } from "@/components/ui/TuiButton";
+import { TuiLoading } from "@/components/ui/TuiLoading";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -54,14 +58,11 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
         {/* Left Side: Inputs */}
-        <section className="bg-black border-2 border-primary p-6 flex flex-col relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-4 before:h-4 before:border-t-4 before:border-l-4 before:border-primary after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-4 after:h-4 after:border-b-4 after:border-r-4 after:border-primary">
-          <h2 className="text-2xl font-bold mb-6 bg-primary text-primary-foreground self-start px-2 py-1 uppercase tracking-widest">
-            {t('businessMetrics')}
-          </h2>
+        <TuiSection title={t('businessMetrics')} variant="left">
           <MetricsForm metrics={metrics} onChange={handleMetricsChange} />
 
           <div className="mt-8 pt-4 mt-auto">
-            <button
+            <TuiButton
               onClick={() => {
                 if (isCalculating) return;
                 setIsCalculating(true);
@@ -73,81 +74,69 @@ export default function DashboardPage() {
                   setIsCalculating(false);
                 }, 2000);
               }}
-              disabled={isCalculating}
-              className={`w-full bg-primary text-primary-foreground font-bold py-3 uppercase tracking-widest border-2 border-primary transition-colors focus:ring-0 focus:outline-none ${isCalculating ? 'opacity-70 cursor-wait' : 'hover:bg-transparent hover:text-primary'}`}
+              loading={isCalculating}
             >
-              [ {isCalculating ? t('processingButton') : t('calculateButton', { defaultValue: 'Calculate Projections' })} ]
-            </button>
+              {isCalculating ? t('processingButton') : t('calculateButton', { defaultValue: 'Calculate Projections' })}
+            </TuiButton>
           </div>
-        </section>
+        </TuiSection>
 
         {/* Right Side: Outputs */}
-        <section ref={resultsRef} className={`bg-black border-2 border-primary p-6 flex flex-col space-y-6 transition-all duration-500 uppercase before:content-[''] before:absolute before:top-0 before:right-0 before:w-4 before:h-4 before:border-t-4 before:border-r-4 before:border-primary after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-4 after:h-4 after:border-b-4 after:border-l-4 after:border-primary ${hasCalculated ? 'opacity-100 translate-y-0 relative mt-8' : 'opacity-0 translate-y-4 pointer-events-none absolute'}`}>
+        <TuiSection 
+          variant="right" 
+          sectionRef={resultsRef} 
+          className={`transition-all duration-500 uppercase ${hasCalculated ? 'opacity-100 translate-y-0 relative mt-8' : 'opacity-0 translate-y-4 pointer-events-none absolute'}`}
+        >
           {hasCalculated && (
             <>
               {(isCalculating || isEstimating) && (
-                <div className="flex flex-col items-center justify-center p-12 text-primary animate-pulse h-full min-h-[400px]">
-                  <div className="font-mono text-4xl mb-6 text-primary animate-spin">
-                    [\]
-                  </div>
-                  <p className="font-bold tracking-widest uppercase">
-                    {isCalculating ? t('processingData') : t('loadingPricing')}
-                  </p>
-                </div>
+                <TuiLoading message={isCalculating ? t('processingData') : t('loadingPricing')} />
               )}
 
               {/* Invisível, mas no DOM para permitir que o Componente filho `CostEstimation` rode o effect dele */}
               <div className={`${isCalculating || isEstimating ? 'hidden' : 'block'} space-y-6`}>
-                <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest">
+                <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest leading-none">
                   {t('technicalProjections')}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('avgQPS')} <InfoTooltip content={t('descAvgQPS')} />
-                    </p>
-                    <p className="text-2xl font-black text-primary">{Math.round(projections.avgQPS).toLocaleString()}</p>
-                  </div>
-
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('peakQPS')} <InfoTooltip content={t('descPeakQPS')} />
-                    </p>
-                    <p className="text-2xl font-black text-primary">{Math.round(projections.peakQPS).toLocaleString()}</p>
-                  </div>
-
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('readQPS')} <InfoTooltip content={t('descReadQPS')} />
-                    </p>
-                    <p className="text-xl font-bold text-primary">{Math.round(projections.readQPS).toLocaleString()}</p>
-                  </div>
-
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('writeQPS')} <InfoTooltip content={t('descWriteQPS')} />
-                    </p>
-                    <p className="text-xl font-bold text-primary">{Math.round(projections.writeQPS).toLocaleString()}</p>
-                  </div>
+                  <TuiDataBox 
+                    label={t('avgQPS')} 
+                    value={Math.round(projections.avgQPS).toLocaleString()} 
+                    infoText={t('descAvgQPS')} 
+                  />
+                  <TuiDataBox 
+                    label={t('peakQPS')} 
+                    value={Math.round(projections.peakQPS).toLocaleString()} 
+                    infoText={t('descPeakQPS')} 
+                  />
+                  <TuiDataBox 
+                    label={t('readQPS')} 
+                    value={Math.round(projections.readQPS).toLocaleString()} 
+                    infoText={t('descReadQPS')} 
+                    largeValue={false}
+                  />
+                  <TuiDataBox 
+                    label={t('writeQPS')} 
+                    value={Math.round(projections.writeQPS).toLocaleString()} 
+                    infoText={t('descWriteQPS')} 
+                    largeValue={false}
+                  />
                 </div>
 
                 <div className="border border-primary border-dashed my-6"></div>
                 <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('monthlyEgress')} <InfoTooltip content={t('descEgress')} />
-                    </p>
-                    <p className="text-2xl font-black text-primary">{projections.totalEgressGB.toFixed(2)} GB</p>
-                  </div>
-
-                  <div className="p-4 bg-black border border-primary/50">
-                    <p className="text-sm text-primary font-medium flex items-center">
-                      {t('dbStorage')} <InfoTooltip content={t('descStorage')} />
-                    </p>
-                    <p className="text-2xl font-black text-primary">{projections.totalStorageGB.toFixed(2)} GB</p>
-                  </div>
+                  <TuiDataBox 
+                    label={t('monthlyEgress')} 
+                    value={`${projections.totalEgressGB.toFixed(2)} GB`} 
+                    infoText={t('descEgress')} 
+                  />
+                  <TuiDataBox 
+                    label={t('dbStorage')} 
+                    value={`${projections.totalStorageGB.toFixed(2)} GB`} 
+                    infoText={t('descStorage')} 
+                  />
                 </div>
 
                 <div className="pt-4">
@@ -160,7 +149,7 @@ export default function DashboardPage() {
               </div>
             </>
           )}
-        </section>
+        </TuiSection>
       </div>
     </main>
   );
