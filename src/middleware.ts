@@ -15,9 +15,9 @@ export function middleware(request: NextRequest) {
 
     // Garbage collector básico para liberar ram do Map se passar de 10k acessos diferentes
     if (ipStore.size > 10000) {
-      for (const [key, value] of ipStore.entries()) {
+      ipStore.forEach((value, key) => {
         if (value.resetTime < now) ipStore.delete(key);
-      }
+      });
     }
 
     let rateRecord = ipStore.get(ip);
