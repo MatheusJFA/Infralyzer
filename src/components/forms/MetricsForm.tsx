@@ -47,18 +47,18 @@ function MetricSlider({
 
   return (
     <div className="space-y-4 p-4 border rounded-lg bg-card/50 shadow-sm transition-all hover:bg-card">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <label className="text-sm font-semibold text-foreground tracking-tight flex items-center" htmlFor={name}>
-          {label}
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2">
+        <label className="text-sm font-semibold text-foreground tracking-tight flex items-center xl:max-w-[50%]" htmlFor={name}>
+          <span className="break-words">{label}</span>
           {infoText && <InfoTooltip content={infoText} />}
         </label>
-        <div className="flex items-center gap-2 self-end sm:self-auto">
+        <div className="flex items-center gap-2 shrink-0 self-start xl:self-auto">
           {editable ? (
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => onValueChange(name, Math.max(min, value - (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
+                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring shrink-0"
               >
                 <Minus className="h-3.5 w-3.5" />
               </button>
@@ -72,7 +72,7 @@ function MetricSlider({
               <button
                 type="button"
                 onClick={() => onValueChange(name, Math.min(max, value + (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
+                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring shrink-0"
               >
                 <Plus className="h-3.5 w-3.5" />
               </button>
@@ -82,7 +82,7 @@ function MetricSlider({
               {value.toLocaleString()}
             </div>
           )}
-          {suffix && <span className="text-xs text-muted-foreground font-semibold uppercase">{suffix}</span>}
+          {suffix && <span className="text-xs text-muted-foreground font-semibold uppercase whitespace-nowrap">{suffix}</span>}
         </div>
       </div>
       <input

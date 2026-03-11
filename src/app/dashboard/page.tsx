@@ -35,50 +35,57 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="container mx-auto p-4 md:p-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <main className="container mx-auto p-4 md:p-8 scanlines relative min-h-screen">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b-2 border-primary border-dashed pb-4 max-w-5xl mx-auto">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight">{t('dashboardTitle')}</h1>
-          <p className="text-muted-foreground mt-2">
-            {t('dashboardDesc')}
+          <h1 className="text-4xl font-bold tracking-tight uppercase">
+            <span className="text-primary">{'>'}</span> {t('dashboardTitle')} <span className="animate-pulse font-black text-primary">_</span>
+          </h1>
+          <p className="text-muted-foreground mt-2 uppercase tracking-wide">
+            $ {t('dashboardDesc')}
           </p>
         </div>
-        <LanguageSwitcher />
+        <div className="bg-card border border-primary p-2">
+          <LanguageSwitcher />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
         {/* Left Side: Inputs */}
-        <section className="bg-card border rounded-xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-2xl font-bold mb-6">{t('businessMetrics')}</h2>
+        <section className="bg-black border-2 border-primary p-6 flex flex-col relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-4 before:h-4 before:border-t-4 before:border-l-4 before:border-primary after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-4 after:h-4 after:border-b-4 after:border-r-4 after:border-primary">
+          <h2 className="text-2xl font-bold mb-6 bg-primary text-primary-foreground self-start px-2 py-1 uppercase tracking-widest">
+            {t('businessMetrics')}
+          </h2>
           <MetricsForm metrics={metrics} onChange={handleMetricsChange} />
 
           <div className="mt-8 pt-4 mt-auto">
             <button
               onClick={() => setHasCalculated(true)}
-              className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg shadow-sm hover:bg-primary/90 transition-colors focus:ring-2 focus:ring-ring focus:outline-none"
+              className="w-full bg-primary text-primary-foreground font-bold py-3 uppercase tracking-widest border-2 border-primary hover:bg-transparent hover:text-primary transition-colors focus:ring-0 focus:outline-none"
             >
-              {t('calculateButton', { defaultValue: 'Calculate Projections' })}
+              [ {t('calculateButton', { defaultValue: 'Calculate Projections' })} ]
             </button>
           </div>
         </section>
 
         {/* Right Side: Outputs */}
-        <section className={`bg-card border rounded-xl p-6 shadow-sm flex flex-col space-y-6 transition-all duration-500 ${hasCalculated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+        <section className={`bg-black border-2 border-primary p-6 flex flex-col space-y-6 transition-all duration-500 uppercase before:content-[''] before:absolute before:top-0 before:right-0 before:w-4 before:h-4 before:border-t-4 before:border-r-4 before:border-primary after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-4 after:h-4 after:border-b-4 after:border-l-4 after:border-primary ${hasCalculated ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-4 pointer-events-none absolute'}`}>
           {hasCalculated && (
             <>
               {isEstimating && (
                 <div className="flex flex-col items-center justify-center p-12 text-primary animate-pulse h-full">
-                  <svg className="animate-spin h-8 w-8 mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <p className="font-semibold">{t('loadingPricing')}</p>
+                  <div className="font-mono text-2xl mb-4 text-primary">
+                    [################--]
+                  </div>
+                  <p className="font-bold tracking-widest uppercase">{t('loadingPricing')}</p>
                 </div>
               )}
 
               {/* Invisível, mas no DOM para permitir que o Componente filho `CostEstimation` rode o effect dele */}
               <div className={`${isEstimating ? 'hidden' : 'block'} space-y-6`}>
-                <h2 className="text-2xl font-bold mb-2">{t('technicalProjections')}</h2>
+                <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest">
+                  {t('technicalProjections')}
+                </h2>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-muted/50 border rounded-lg">
@@ -110,20 +117,21 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <h3 className="text-lg font-semibold mt-6 border-b pb-2">{t('monthlyAccumulation')}</h3>
+                <div className="border border-primary border-dashed my-6"></div>
+                <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-secondary/20 border border-secondary/30 rounded-lg">
+                  <div className="p-4 bg-secondary/20 border border rounded-lg">
                     <p className="text-sm text-muted-foreground font-medium flex items-center">
                       {t('monthlyEgress')} <InfoTooltip content={t('descEgress')} />
                     </p>
-                    <p className="text-2xl font-black text-accent-foreground">{projections.totalEgressGB.toFixed(2)} GB</p>
+                    <p className="text-2xl font-black  text-secondary-foreground">{projections.totalEgressGB.toFixed(2)} GB</p>
                   </div>
 
-                  <div className="p-4 bg-secondary/20 border border-secondary/30 rounded-lg">
+                  <div className="p-4 bg-secondary/20 border rounded-lg">
                     <p className="text-sm text-muted-foreground font-medium flex items-center">
                       {t('dbStorage')} <InfoTooltip content={t('descStorage')} />
                     </p>
-                    <p className="text-2xl font-black text-accent-foreground">{projections.totalStorageGB.toFixed(2)} GB</p>
+                    <p className="text-2xl font-black text-secondary-foreground">{projections.totalStorageGB.toFixed(2)} GB</p>
                   </div>
                 </div>
 
