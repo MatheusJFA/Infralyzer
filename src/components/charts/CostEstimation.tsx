@@ -114,10 +114,10 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-2">
-        <h3 className="text-lg font-semibold">{t('estimatedCosts')}</h3>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b-2 border-primary border-dashed pb-2">
+        <h3 className="text-lg font-bold tracking-widest uppercase text-primary">{t('estimatedCosts')}</h3>
         {cacheTime && !isLoading && (
-          <span className="text-xs font-semibold px-2 py-1 rounded bg-secondary/50 text-secondary-foreground border">
+          <span className="text-xs font-bold tracking-widest uppercase px-2 py-1 bg-black text-primary border border-primary">
             {t('lastUpdated', { time: cacheTime })}
           </span>
         )}
@@ -125,7 +125,7 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
 
       {isLoading ? (
         !hideLoader && (
-          <div className="flex justify-center items-center text-sm text-primary font-semibold animate-pulse p-6 border rounded-lg bg-card/50">
+          <div className="flex justify-center items-center text-sm text-primary font-bold animate-pulse p-6 border border-primary bg-black tracking-widest uppercase">
             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -135,7 +135,7 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
         )
       ) : (
         <>
-          <div className="mb-4 p-3 bg-secondary/10 border border-primary border-dashed text-xs text-primary/80 tracking-widest uppercase">
+          <div className="mb-4 p-3 bg-black border border-primary border-dashed text-xl text-primary font-bold tracking-widest uppercase mt-4">
             {t('sysInfoPricing', { rate: exchangeRate.toFixed(2) })}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
