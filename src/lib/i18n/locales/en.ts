@@ -49,5 +49,7 @@ export const en = {
   descEgress: "Total network bandwidth leaving your cloud provider (inbound is usually free).",
   descStorage: "Cumulative raw disk size needed to buffer your DB nodes.",
   descCost: "Rough theoretical cost combining base storage and outbound internet traffic.",
+  processingButton: "PROCESSING...",
+  processingData: "PROCESSING DATA...",
   sysInfoPricing: "> SYS_INFO: Pricing sourced from public Cloud APIs. USD to BRL conversion (@{rate}) via open.er-api.com.",
 };

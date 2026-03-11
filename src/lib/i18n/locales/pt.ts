@@ -51,5 +51,7 @@ export const pt: typeof en = {
   descEgress: "Soma do pacote de dados 'Saindo' da Nuvem pela Internet (Inbound costuma ser grátis).",
   descStorage: "Tamanho bruto preenchido no disco somando os nós de redundância.",
   descCost: "Somatória especulativa cruzando tráfego de saída real mais os armazenamentos na cloud.",
+  processingButton: "PROCESSANDO...",
+  processingData: "PROCESSANDO DADOS...",
   sysInfoPricing: "> SYS_INFO: Valores originários das APIs públicas Cloud. Conversão de USD para BRL (@{rate}) via open.er-api.com.",
 };

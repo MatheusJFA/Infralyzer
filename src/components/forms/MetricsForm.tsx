@@ -46,7 +46,7 @@ function MetricSlider({
   };
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-card/50 shadow-sm transition-all hover:bg-card">
+    <div className="space-y-4 p-4 border border-primary/50 hover:border-primary rounded-none bg-black shadow-none transition-all">
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2">
         <label className="text-sm font-semibold text-foreground tracking-tight flex items-center xl:max-w-[50%]" htmlFor={name}>
           <span className="break-words">{label}</span>
@@ -58,7 +58,7 @@ function MetricSlider({
               <button
                 type="button"
                 onClick={() => onValueChange(name, Math.max(min, value - (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring shrink-0"
+                className="h-7 w-7 flex items-center justify-center rounded-none border border-primary/50 bg-black hover:bg-primary/20 text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
               >
                 <Minus className="h-3.5 w-3.5" />
               </button>
@@ -67,22 +67,22 @@ function MetricSlider({
                 name={name}
                 value={value || ""}
                 onChange={handleChange}
-                className="w-20 text-center text-sm font-bold bg-secondary/80 text-secondary-foreground px-2 py-1 rounded-md shadow-sm border border-input focus:outline-none focus:ring-2 focus:ring-ring [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
+                className="w-20 text-center text-sm font-bold bg-black text-primary px-2 py-1 rounded-none shadow-none border border-primary/50 hover:border-primary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
               />
               <button
                 type="button"
                 onClick={() => onValueChange(name, Math.min(max, value + (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-md border border-input bg-background hover:bg-secondary text-muted-foreground hover:text-secondary-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring shrink-0"
+                className="h-7 w-7 flex items-center justify-center rounded-none border border-primary/50 bg-black hover:bg-primary/20 text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
               >
                 <Plus className="h-3.5 w-3.5" />
               </button>
             </div>
           ) : (
-            <div className="text-sm font-bold bg-secondary/80 text-secondary-foreground px-3 py-1 rounded-md shadow-sm">
+            <div className="text-sm font-bold bg-black text-primary border border-primary/50 px-3 py-1 rounded-none shadow-none">
               {value.toLocaleString()}
             </div>
           )}
-          {suffix && <span className="text-xs text-muted-foreground font-semibold uppercase whitespace-nowrap">{suffix}</span>}
+          {suffix && <span className="text-xs text-primary font-bold uppercase whitespace-nowrap tracking-widest">{suffix}</span>}
         </div>
       </div>
       <input
@@ -94,7 +94,7 @@ function MetricSlider({
         step={step}
         value={value}
         onChange={handleChange}
-        className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-secondary accent-primary hover:accent-primary/80 transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+        className="w-full h-2 appearance-none cursor-pointer bg-secondary/50 outline-none hover:bg-secondary transition-all [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-none [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-none"
       />
       {presets.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-1">
@@ -103,7 +103,7 @@ function MetricSlider({
               key={preset.label}
               type="button"
               onClick={() => onValueChange(name, preset.value)}
-              className="px-2.5 py-1 text-xs font-semibold rounded-md border border-input bg-background hover:bg-secondary hover:text-secondary-foreground text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+              className="px-2.5 py-1 text-xs font-bold tracking-wider rounded-none border border-primary/50 bg-black hover:bg-primary/20 hover:border-primary text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary"
             >
               {preset.label}
             </button>
@@ -196,10 +196,11 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           value={metrics.ReadRatioPercentage}
           min={0}
           max={100}
-          step={1}
+          step={5}
           onValueChange={handleValueChange}
           infoText={t('descRatio')}
           suffix="% Reads"
+          editable
         />
       </div>
 
