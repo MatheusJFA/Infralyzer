@@ -51,13 +51,7 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
             return;
           }
         }
-        const [
-          awsStorageRes, awsEgressRes,
-          azureStorageRes, azureEgressRes,
-          gcpStorageRes, gcpEgressRes,
-          oracleStorageRes, oracleEgressRes,
-          exchangeRes
-        ] = await Promise.all([
+        const responses = await Promise.allSettled([
           fetch("/api/aws?service=storage").then(res => res.json()),
           fetch("/api/aws?service=egress").then(res => res.json()),
           fetch("/api/azure?service=storage").then(res => res.json()),
@@ -69,27 +63,42 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
           fetch("https://open.er-api.com/v6/latest/USD").then(res => res.json()).catch(() => ({ rates: { BRL: 5.0 } }))
         ]);
 
-        const isMockedStatus = (status: string) => status !== "live";
+        const getRes = (index: number) => responses[index].status === 'fulfilled' ? (responses[index] as PromiseFulfilledResult<any>).value : null;
+
+        const awsStorageRes = getRes(0);
+        const awsEgressRes = getRes(1);
+        const azureStorageRes = getRes(2);
+        const azureEgressRes = getRes(3);
+        const gcpStorageRes = getRes(4);
+        const gcpEgressRes = getRes(5);
+        const oracleStorageRes = getRes(6);
+        const oracleEgressRes = getRes(7);
+        const exchangeRes = getRes(8);
+
+        const isMocked = (res1: any, res2: any) => {
+          if (!res1 || !res2) return true;
+          return res1.status !== "live" || res2.status !== "live";
+        };
 
         const newAws = {
-          storage: awsStorageRes.pricePerGB || 0.023,
-          egress: awsEgressRes.pricePerGB || 0.09,
-          isMocked: isMockedStatus(awsStorageRes.status || "mock"),
+          storage: awsStorageRes?.pricePerGB || 0.023,
+          egress: awsEgressRes?.pricePerGB || 0.09,
+          isMocked: isMocked(awsStorageRes, awsEgressRes),
         };
         const newAzure = {
-          storage: azureStorageRes.pricePerGB || 0.0184,
-          egress: azureEgressRes.pricePerGB || 0.087,
-          isMocked: isMockedStatus(azureStorageRes.status || "mock"),
+          storage: azureStorageRes?.pricePerGB || 0.0184,
+          egress: azureEgressRes?.pricePerGB || 0.087,
+          isMocked: isMocked(azureStorageRes, azureEgressRes),
         };
         const newGcp = {
-          storage: gcpStorageRes.pricePerGB || 0.020,
-          egress: gcpEgressRes.pricePerGB || 0.085,
-          isMocked: isMockedStatus(gcpStorageRes.status || "mock"),
+          storage: gcpStorageRes?.pricePerGB || 0.020,
+          egress: gcpEgressRes?.pricePerGB || 0.085,
+          isMocked: isMocked(gcpStorageRes, gcpEgressRes),
         };
         const newOracle = {
-          storage: oracleStorageRes.pricePerGB || 0.0255,
-          egress: oracleEgressRes.pricePerGB || 0.0085,
-          isMocked: isMockedStatus(oracleStorageRes.status || "mock"),
+          storage: oracleStorageRes?.pricePerGB || 0.0255,
+          egress: oracleEgressRes?.pricePerGB || 0.0085,
+          isMocked: isMocked(oracleStorageRes, oracleEgressRes),
         };
 
         setAwsPricing(newAws);
@@ -100,9 +109,17 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
         const newExchangeRate = exchangeRes?.rates?.BRL || 5.0;
         setExchangeRate(newExchangeRate);
 
+        const isGlobalLive = !newAws.isMocked && !newAzure.isMocked && !newGcp.isMocked && !newOracle.isMocked;
+
         const now = Date.now();
         localStorage.setItem(CACHE_KEY, JSON.stringify({
-          aws: newAws, azure: newAzure, gcp: newGcp, oracle: newOracle, exchangeRate: newExchangeRate, timestamp: now
+          aws: newAws,
+          azure: newAzure,
+          gcp: newGcp,
+          oracle: newOracle,
+          exchangeRate: newExchangeRate,
+          timestamp: now,
+          status: isGlobalLive ? 'live' : 'mock'
         }));
         setCacheTime(new Date(now).toLocaleString());
       } catch (error) {

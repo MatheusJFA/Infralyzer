@@ -170,10 +170,12 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           infoText={t('descRequests')}
           editable
           presets={[
+            { label: "1", value: 1 },
             { label: "10", value: 10 },
             { label: "50", value: 50 },
             { label: "150", value: 150 },
             { label: "500", value: 500 },
+            { label: "1000", value: 1000 }
           ]}
         />
 
@@ -211,7 +213,7 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           name="AvgPayloadSizeBytes"
           value={metrics.AvgPayloadSizeBytes}
           min={10}
-          max={50000}
+          max={1000000}
           step={10}
           onValueChange={handleValueChange}
           suffix={t('bytes')}
@@ -219,9 +221,11 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           editable
           presets={[
             { label: "100B", value: 100 },
-            { label: "500B", value: 500 },
-            { label: "2KB", value: 2048 },
+            { label: "1KB", value: 1024 },
             { label: "10KB", value: 10240 },
+            { label: "50KB", value: 51200 },
+            { label: "250KB", value: 256000 },
+            { label: "1MB", value: 1048576 },
           ]}
         />
 
@@ -237,10 +241,12 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           infoText={t('descResponse')}
           editable
           presets={[
+            { label: "100B", value: 100 },
             { label: "1KB", value: 1024 },
             { label: "10KB", value: 10240 },
             { label: "50KB", value: 51200 },
-            { label: "500KB", value: 512000 },
+            { label: "250KB", value: 256000 },
+            { label: "1MB", value: 1048576 },
           ]}
         />
 
