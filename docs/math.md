@@ -1,6 +1,6 @@
-# Cálculos de Dimensionamento e Custos (Infralyze)
+# Cálculos de Dimensionamento e Custos (Infralyzer)
 
-Este documento detalha as fórmulas matemáticas, algoritmos e lógicas de cálculo que o Infralyze utiliza para converter métricas de negócio em requisitos de infraestrutura e projeções de custos, conforme definido na arquitetura principal (SAD).
+Este documento detalha as fórmulas matemáticas, algoritmos e lógicas de cálculo que o Infralyzer utiliza para converter métricas de negócio em requisitos de infraestrutura e projeções de custos, conforme definido na arquitetura principal (SAD).
 
 ---
 

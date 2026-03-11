@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  // Example: /api/aws?service=storage
   const service = searchParams.get("service") || "storage";
 
   let pricePerGB = 0;

@@ -1,5 +1,5 @@
 export const en = {
-  dashboardTitle: "Infralyze Dashboard",
+  dashboardTitle: "Infralyzer Dashboard",
   dashboardDesc: "Model your infrastructure based on user traffic and business rules.",
   businessMetrics: "Business Metrics (Inputs)",
   technicalProjections: "Technical Projections",

@@ -30,7 +30,7 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
       setIsLoading(true);
       onLoadingChange?.(true);
       try {
-        const CACHE_KEY = "infralyze_cloud_pricing_cache";
+        const CACHE_KEY = "Infralyzer_cloud_pricing_cache";
         const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
         const cached = localStorage.getItem(CACHE_KEY);
@@ -154,7 +154,7 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
                   ~ R$ {(totalAWS * exchangeRate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
-              
+
               <div className="space-y-1 text-sm border-t-2 border-orange-500 border-dashed pt-3">
                 <div className="flex justify-between text-orange-500/90">
                   <span className="tracking-widest">{t('storageCost')}</span>
@@ -239,18 +239,18 @@ export function CostEstimation({ projections, onLoadingChange, hideLoader = fals
                 </p>
               </div>
 
-            <div className="space-y-1 text-sm border-t-2 border-red-500 border-dashed pt-3">
-              <div className="flex justify-between text-red-500/90">
-                <span className="tracking-widest">{t('storageCost')}</span>
-                <span className="font-bold">${(projections.totalStorageGB * oraclePricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between text-red-500/90">
-                <span className="tracking-widest">{t('dataEgress')}</span>
-                <span className="font-bold">${(projections.totalEgressGB * oraclePricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <div className="space-y-1 text-sm border-t-2 border-red-500 border-dashed pt-3">
+                <div className="flex justify-between text-red-500/90">
+                  <span className="tracking-widest">{t('storageCost')}</span>
+                  <span className="font-bold">${(projections.totalStorageGB * oraclePricing.storage).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between text-red-500/90">
+                  <span className="tracking-widest">{t('dataEgress')}</span>
+                  <span className="font-bold">${(projections.totalEgressGB * oraclePricing.egress).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </>
       )}
     </div>

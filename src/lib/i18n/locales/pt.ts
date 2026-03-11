@@ -1,7 +1,7 @@
 import type { en } from "./en";
 
 export const pt: typeof en = {
-  dashboardTitle: "Painel Infralyze",
+  dashboardTitle: "Painel Infralyzer",
   dashboardDesc: "Modele sua infraestrutura baseada no tráfego de usuários e regras de negócio.",
   businessMetrics: "Métricas de Negócio (Entradas)",
   technicalProjections: "Projeções Técnicas",

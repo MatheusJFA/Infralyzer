@@ -1,11 +1,11 @@
-🏗️ SAD - Project Infralyze
+🏗️ SAD - Project Infralyzer
 
 Documento de Arquitetura de Software Versão: 1.1 (Next.js Edition)
 Status: Em Desenvolvimento
 
 1. Visão Geral
 
-O Infralyze é uma ferramenta de suporte à decisão para arquitetos de sistemas. Ele transforma métricas de negócio (DAU, comportamento do usuário) em previsões técnicas de infraestrutura e custos financeiros reais, consumindo APIs públicas de provedores de Cloud.
+O Infralyzer é uma ferramenta de suporte à decisão para arquitetos de sistemas. Ele transforma métricas de negócio (DAU, comportamento do usuário) em previsões técnicas de infraestrutura e custos financeiros reais, consumindo APIs públicas de provedores de Cloud.
 
 2. Requisitos do Sistema
 2.1 Funcionais (FR)

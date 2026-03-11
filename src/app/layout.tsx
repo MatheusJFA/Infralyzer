@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Infralyze - Infrastructure Sizing & Cost Prediction",
+  title: "Infralyzer - Infrastructure Sizing & Cost Prediction",
   description: "Transform business metrics into cloud infrastructure requirements.",
 };
 

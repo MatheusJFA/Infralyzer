@@ -17,14 +17,14 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   // Load language from localStorage if possible (client side only)
   useEffect(() => {
-    const saved = localStorage.getItem('infralyze_lang') as Language;
+    const saved = localStorage.getItem('Infralyzer_lang') as Language;
     if (saved && (saved === 'en' || saved === 'pt')) setLocale(saved);
     else if (navigator.language.startsWith('pt')) setLocale('pt');
   }, []);
 
   const changeLocale = (lang: Language) => {
     setLocale(lang);
-    localStorage.setItem('infralyze_lang', lang);
+    localStorage.setItem('Infralyzer_lang', lang);
   };
 
   const t = (key: TranslationKeys, params?: Record<string, string | number>) => {
