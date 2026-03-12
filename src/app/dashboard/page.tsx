@@ -99,7 +99,7 @@ export default function DashboardPage() {
                   {t('technicalProjections')}
                 </h2>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <TuiDataBox 
                     label={t('avgQPS')} 
                     value={Math.round(projections.avgQPS).toLocaleString()} 
@@ -126,7 +126,7 @@ export default function DashboardPage() {
 
                 <div className="border border-primary border-dashed my-6"></div>
                 <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <TuiDataBox 
                     label={t('monthlyEgress')} 
                     value={`${projections.totalEgressGB.toFixed(2)} GB`} 

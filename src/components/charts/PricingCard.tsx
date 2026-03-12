@@ -65,7 +65,7 @@ export function PricingCard({
   const theme = themeConfigs[themeColor];
 
   return (
-    <div className="p-4 bg-black border border-primary/50 hover:border-primary transition-all duration-300 relative group uppercase">
+    <div className="w-full p-4 bg-black border border-primary/50 hover:border-primary transition-all duration-300 relative group uppercase">
       <div className="flex justify-between items-start mb-4">
         <p className="text-xs text-primary/70 font-bold tracking-widest">{providerTitle}</p>
         <div className={`px-2 py-0.5 border ${theme.border} ${theme.text} text-[10px] font-black bg-black`}>

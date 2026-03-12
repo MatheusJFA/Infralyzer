@@ -16,7 +16,7 @@ export function TuiSection({ title, children, className = "", sectionRef, varian
   return (
     <section
       ref={sectionRef}
-      className={`bg-black border-2 border-primary p-6 flex flex-col relative 
+      className={`w-full bg-black border-2 border-primary p-6 flex flex-col relative 
         before:content-[''] before:absolute before:w-4 before:h-4 before:border-primary 
         after:content-[''] after:absolute after:w-4 after:h-4 after:border-primary 
         ${cornerClasses} ${className}`}

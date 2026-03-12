@@ -10,7 +10,7 @@ export function TuiBanner({ children, className = "", variant = 'dashed' }: TuiB
   const borderClass = variant === 'dashed' ? 'border-dashed' : 'border-solid';
   
   return (
-    <div className={`mb-4 p-3 bg-black border border-primary ${borderClass} text-xl text-primary font-bold tracking-widest uppercase mt-4 ${className}`}>
+    <div className={`w-full mb-4 p-3 bg-black border border-primary ${borderClass} text-xl text-primary font-bold tracking-widest uppercase mt-4 ${className}`}>
       {children}
     </div>
   );

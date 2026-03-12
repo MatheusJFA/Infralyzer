@@ -11,7 +11,7 @@ interface TuiDataBoxProps {
 
 export function TuiDataBox({ label, value, infoText, className = "", largeValue = true }: TuiDataBoxProps) {
   return (
-    <div className={`p-4 bg-black border border-primary/50 hover:border-primary transition-colors ${className}`}>
+    <div className={`w-full p-4 bg-black border border-primary/50 hover:border-primary transition-colors ${className}`}>
       <p className="text-sm text-primary font-medium flex items-center mb-1">
         <span className="opacity-80 font-bold uppercase tracking-tight">{label}</span>
         {infoText && <InfoTooltip content={infoText} />}
