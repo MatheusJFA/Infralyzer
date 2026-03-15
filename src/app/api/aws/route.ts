@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 
+import { localCache, CACHE_TTL_MS } from "@/lib/cacheMemory";
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const service = searchParams.get("service") || "storage";
+  const cacheKey = `aws_${service}`;
+
+  const cached = localCache.get(cacheKey);
+  if (cached && cached.expiry > Date.now()) {
+    return NextResponse.json(cached.data);
+  }
 
   try {
     let pricePerGB = 0;
@@ -59,6 +67,7 @@ export async function GET(request: Request) {
       status: "live",
     };
 
+    localCache.set(cacheKey, { data: responseData, expiry: Date.now() + CACHE_TTL_MS });
     return NextResponse.json(responseData);
 
   } catch (error) {

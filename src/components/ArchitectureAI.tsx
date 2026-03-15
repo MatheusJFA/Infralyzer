@@ -47,7 +47,8 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
         desc: t('aiReadHeavyDesc' as any),
         terms: [
           { word: "Database Replication", hint: t('tooltipReplication' as any) },
-          { word: "Read Replicas", hint: t('tooltipReadReplicas' as any) }
+          { word: "Read Replicas", hint: t('tooltipReadReplicas' as any) },
+          { word: "Redis", hint: t('aiCacheTitle' as any) } // A quick fallback hint
         ]
       })
     }
@@ -59,7 +60,8 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
         desc: t('aiWriteHeavyDesc' as any),
         terms: [
           { word: "Sharding", hint: t('tooltipSharding' as any) },
-          { word: "Partitioning", hint: t('tooltipPartitioning' as any) }
+          { word: "Partitioning", hint: t('tooltipPartitioning' as any) },
+          { word: "NoSQL", hint: "Database approach designed for unstructured or highly-scalable inserts like DynamoDB or MongoDB." }
         ]
       })
     }
@@ -82,12 +84,29 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
       });
     }
 
-    // CDN Egress Warning
+    // CDN and Edge Warning
     if (projections.totalEgressGB > 2000) {
       insights.push({
         icon: <Info size={18} className="text-blue-500" />,
         title: t('aiCdnTitle' as any),
         desc: t('aiCdnDesc' as any),
+        terms: [
+          { word: "Edge Computing", hint: t('tooltipEdgeComputing' as any) },
+          { word: "CDN", hint: "Content Delivery Network - Edge cache for media." }
+        ]
+      });
+    }
+
+    // Serverless (To save Peak Factor costs)
+    if ((metrics.PeakFactor || 1.0) > 3.0) {
+      insights.push({
+        icon: <Zap size={18} className="text-pink-500" />,
+        title: t('aiServerlessTitle' as any),
+        desc: t('aiServerlessDesc' as any),
+        terms: [
+          { word: "Serverless Compute", hint: t('tooltipServerlessCompute' as any) },
+          { word: "Compute", hint: "Standard term for Processing VMs and CPUs like EC2 or droplets." }
+        ]
       });
     }
 

@@ -165,12 +165,13 @@ export default function DashboardPage() {
                     {t('technicalProjections')}
                   </h2>
                   <div>
-                    <ExportPDFButton 
-                      filename="infralyzer-report.pdf" 
-                      metrics={activeMetrics} 
-                      projections={projections} 
-                      pricingData={pricingData} 
-                    />
+                      <ExportPDFButton 
+                        filename="infralyzer-report.pdf" 
+                        metrics={activeMetrics}
+                        scenarios={scenarios}
+                        projections={projections} 
+                        pricingData={pricingData} 
+                      />
                   </div>
                 </div>
 
