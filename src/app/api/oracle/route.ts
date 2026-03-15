@@ -1,21 +1,10 @@
 import { NextResponse } from "next/server";
-import { redis } from "@/lib/redis";
-
-const CACHE_TTL = 60 * 60 * 3; // 3 horas
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const service = searchParams.get("service") || "storage";
-  const cacheKey = `pricing:oracle:${service}`;
 
   try {
-    const cachedData = await redis.get(cacheKey);
-    if (cachedData) {
-      return NextResponse.json({
-        ...JSON.parse(cachedData),
-        status: "cached"
-      });
-    }
 
     const res = await fetch('https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/', { cache: 'no-store' });
     if (!res.ok) throw new Error("Oracle API failed");
@@ -47,10 +36,6 @@ export async function GET(request: Request) {
       pricePerGB,
       status: isMock ? "mock" : "live",
     };
-
-    if (!isMock) {
-      await redis.set(cacheKey, JSON.stringify(responseData), "EX", CACHE_TTL);
-    }
 
     return NextResponse.json(responseData);
 

@@ -17,7 +17,7 @@ interface Preset {
   value: number;
 }
 
-function MetricSlider({
+export function MetricSlider({
   label,
   name,
   value,

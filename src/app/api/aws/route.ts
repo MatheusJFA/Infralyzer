@@ -1,23 +1,10 @@
 import { NextResponse } from "next/server";
-import { redis } from "@/lib/redis";
-
-const CACHE_TTL = 60 * 60 * 3; // 3 horas
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const service = searchParams.get("service") || "storage";
-  const cacheKey = `pricing:aws:${service}`;
 
   try {
-    // 1. Tentar buscar do Cache (Redis)
-    const cachedData = await redis.get(cacheKey);
-    if (cachedData) {
-      return NextResponse.json({
-        ...JSON.parse(cachedData),
-        status: "cached"
-      });
-    }
-
     let pricePerGB = 0;
     let isMock = false;
 
@@ -71,11 +58,6 @@ export async function GET(request: Request) {
       pricePerGB,
       status: "live",
     };
-
-    // 2. Salvar no Cache apenas se tivermos valor real (não padrão fallback)
-    if (pricePerGB !== 0.023 && pricePerGB !== 0.09) {
-      await redis.set(cacheKey, JSON.stringify(responseData), "EX", CACHE_TTL).catch(() => {});
-    }
 
     return NextResponse.json(responseData);
 

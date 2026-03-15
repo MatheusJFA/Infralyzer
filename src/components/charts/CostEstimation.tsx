@@ -81,7 +81,6 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
         const isMocked = (res1: any, res2: any) => !res1 || !res2 || res1.status === "mock" || res2.status === "mock";
         
         const newPricing: Record<string, PricingData> = {};
-        let isRedisCached = false;
         
         PROVIDERS.forEach((p, idx) => {
           const storageRes = getRes(idx * 2);
@@ -91,7 +90,6 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
             egress: egressRes?.pricePerGB || p.defaultEgress,
             isMocked: isMocked(storageRes, egressRes)
           };
-          if (storageRes?.status === "cached") isRedisCached = true;
         });
 
         const exchangeRes = getRes(PROVIDERS.length * 2);
@@ -104,7 +102,7 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
         const cacheData = { ...newPricing, exchangeRate: newExchangeRate, timestamp: now };
         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
 
-        setCacheTime(new Date(now).toLocaleTimeString() + (isRedisCached ? " (REDIS)" : " (LIVE)"));
+        setCacheTime(new Date(now).toLocaleTimeString() + " (LIVE)");
         onPricingLoaded?.(cacheData);
 
       } catch (error) {
@@ -145,7 +143,7 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {PROVIDERS.map(p => {
               const data = pricing[p.id];
-              const totalUsd = (projections.totalStorageGB * data.storage) + (projections.totalEgressGB * data.egress);
+              const totalUsd = (projections.totalStorageGB * (data?.storage || p.defaultStorage)) + (projections.totalEgressGB * (data?.egress || p.defaultEgress));
               return (
                 <PricingCard
                   key={p.id}
@@ -153,9 +151,9 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
                   providerTitle={t(p.titleKey as any)}
                   totalUsd={totalUsd}
                   totalBrl={totalUsd * exchangeRate}
-                  isMocked={data.isMocked}
-                  storageCostUsd={projections.totalStorageGB * data.storage}
-                  egressCostUsd={projections.totalEgressGB * data.egress}
+                  isMocked={data?.isMocked ?? true}
+                  storageCostUsd={projections.totalStorageGB * (data?.storage || p.defaultStorage)}
+                  egressCostUsd={projections.totalEgressGB * (data?.egress || p.defaultEgress)}
                   themeColor={p.color as any}
                 />
               );
