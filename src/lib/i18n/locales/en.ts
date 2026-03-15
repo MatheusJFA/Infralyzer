@@ -54,4 +54,6 @@ export const en = {
   sysInfoPricing: "> SYS_INFO: Pricing sourced from public Cloud APIs. USD to BRL conversion (@{rate}) via open.er-api.com.",
   mocked: "MOCK",
   live: "LIVE",
+  exportPdf: "EXPORT PDF",
+  exportPdfLoading: "GENERATING PDF...",
 };

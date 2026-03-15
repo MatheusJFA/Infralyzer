@@ -12,6 +12,7 @@ import { TuiSection } from "@/components/ui/TuiSection";
 import { TuiDataBox } from "@/components/ui/TuiDataBox";
 import { TuiButton } from "@/components/ui/TuiButton";
 import { TuiLoading } from "@/components/ui/TuiLoading";
+import { ExportPDFButton } from "@/components/ui/ExportPDFButton";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [hasCalculated, setHasCalculated] = useState(false);
   const [isEstimating, setIsEstimating] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [pricingData, setPricingData] = useState<any>(null);
   const resultsRef = useRef<HTMLElement>(null);
 
   const projections = useMemo(() => calculateInfrastructure(metrics), [metrics]);
@@ -41,7 +43,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="container mx-auto p-4 md:p-8 scanlines relative min-h-screen">
+    <main id="pdf-report-content" className="container mx-auto p-4 md:p-8 scanlines relative min-h-screen bg-black">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b-2 border-primary border-dashed pb-4 max-w-5xl mx-auto">
         <div>
           <h1 className="text-4xl font-bold tracking-tight uppercase">
@@ -51,7 +53,7 @@ export default function DashboardPage() {
             $ {t('dashboardDesc')}
           </p>
         </div>
-        <div className="bg-card border border-primary p-2">
+        <div className="bg-card border border-primary p-2" data-html2canvas-ignore="true">
           <LanguageSwitcher />
         </div>
       </div>
@@ -61,7 +63,7 @@ export default function DashboardPage() {
         <TuiSection title={t('businessMetrics')} variant="left">
           <MetricsForm metrics={metrics} onChange={handleMetricsChange} />
 
-          <div className="mt-8 pt-4 mt-auto">
+          <div className="mt-8 pt-4 mt-auto" data-html2canvas-ignore="true">
             <TuiButton
               onClick={() => {
                 if (isCalculating) return;
@@ -95,56 +97,69 @@ export default function DashboardPage() {
 
               {/* Invisível, mas no DOM para permitir que o Componente filho `CostEstimation` rode o effect dele */}
               <div className={`${isCalculating || isEstimating ? 'hidden' : 'block'} space-y-6`}>
-                <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest leading-none">
-                  {t('technicalProjections')}
-                </h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <TuiDataBox 
-                    label={t('avgQPS')} 
-                    value={Math.round(projections.avgQPS).toLocaleString()} 
-                    infoText={t('descAvgQPS')} 
-                  />
-                  <TuiDataBox 
-                    label={t('peakQPS')} 
-                    value={Math.round(projections.peakQPS).toLocaleString()} 
-                    infoText={t('descPeakQPS')} 
-                  />
-                  <TuiDataBox 
-                    label={t('readQPS')} 
-                    value={Math.round(projections.readQPS).toLocaleString()} 
-                    infoText={t('descReadQPS')} 
-                    largeValue={false}
-                  />
-                  <TuiDataBox 
-                    label={t('writeQPS')} 
-                    value={Math.round(projections.writeQPS).toLocaleString()} 
-                    infoText={t('descWriteQPS')} 
-                    largeValue={false}
-                  />
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                  <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest leading-none">
+                    {t('technicalProjections')}
+                  </h2>
+                  <div data-html2canvas-ignore="true">
+                    <ExportPDFButton 
+                      filename="infralyzer-report.pdf" 
+                      metrics={metrics} 
+                      projections={projections} 
+                      pricingData={pricingData} 
+                    />
+                  </div>
                 </div>
+                
+                <div className="space-y-6 bg-black p-4 -mx-4 rounded border-2 border-transparent">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <TuiDataBox 
+                      label={t('avgQPS')} 
+                      value={Math.round(projections.avgQPS).toLocaleString()} 
+                      infoText={t('descAvgQPS')} 
+                    />
+                    <TuiDataBox 
+                      label={t('peakQPS')} 
+                      value={Math.round(projections.peakQPS).toLocaleString()} 
+                      infoText={t('descPeakQPS')} 
+                    />
+                    <TuiDataBox 
+                      label={t('readQPS')} 
+                      value={Math.round(projections.readQPS).toLocaleString()} 
+                      infoText={t('descReadQPS')} 
+                      largeValue={false}
+                    />
+                    <TuiDataBox 
+                      label={t('writeQPS')} 
+                      value={Math.round(projections.writeQPS).toLocaleString()} 
+                      infoText={t('descWriteQPS')} 
+                      largeValue={false}
+                    />
+                  </div>
 
-                <div className="border border-primary border-dashed my-6"></div>
-                <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <TuiDataBox 
-                    label={t('monthlyEgress')} 
-                    value={`${projections.totalEgressGB.toFixed(2)} GB`} 
-                    infoText={t('descEgress')} 
-                  />
-                  <TuiDataBox 
-                    label={t('dbStorage')} 
-                    value={`${projections.totalStorageGB.toFixed(2)} GB`} 
-                    infoText={t('descStorage')} 
-                  />
-                </div>
+                  <div className="border border-primary border-dashed my-6"></div>
+                  <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <TuiDataBox 
+                      label={t('monthlyEgress')} 
+                      value={`${projections.totalEgressGB.toFixed(2)} GB`} 
+                      infoText={t('descEgress')} 
+                    />
+                    <TuiDataBox 
+                      label={t('dbStorage')} 
+                      value={`${projections.totalStorageGB.toFixed(2)} GB`} 
+                      infoText={t('descStorage')} 
+                    />
+                  </div>
 
-                <div className="pt-4">
-                  <CostEstimation
-                    projections={projections}
-                    hideLoader
-                    onLoadingChange={setIsEstimating}
-                  />
+                  <div className="pt-4">
+                    <CostEstimation
+                      projections={projections}
+                      hideLoader
+                      onLoadingChange={setIsEstimating}
+                      onPricingLoaded={setPricingData}
+                    />
+                  </div>
                 </div>
               </div>
             </>

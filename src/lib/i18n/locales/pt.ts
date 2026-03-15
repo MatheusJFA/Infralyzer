@@ -56,4 +56,6 @@ export const pt: typeof en = {
   sysInfoPricing: "> SYS_INFO: Valores originários das APIs públicas Cloud. Conversão de USD para BRL (@{rate}) via open.er-api.com.",
   mocked: "MOCKADO",
   live: "AO VIVO",
+  exportPdf: "GERAR PDF",
+  exportPdfLoading: "GERANDO PDF...",
 };
