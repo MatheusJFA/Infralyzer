@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 120 100% 50%;
+    --background: 0 0% 0%; /* #000000 */
+    --foreground: 120 100% 50%; /* #00FF00 */
 
-    --card: 0 0% 0%;
-    --card-foreground: 120 100% 50%;
+    --card: 0 0% 4%; /* #0e0e0e */
+    --card-foreground: 120 100% 50%; /* #00FF00 */
 
     --popover: 0 0% 0%;
     --popover-foreground: 120 100% 50%;
 
-    --primary: 120 100% 50%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 120 100% 50%; /* #00FF00 */
+    --primary-foreground: 0 0% 0%; /* #000000 */
 
-    --secondary: 120 100% 10%;
-    --secondary-foreground: 120 100% 50%;
+    --secondary: 0 0% 10%; /* #1A1A1A */
+    --secondary-foreground: 120 100% 50%; /* #00FF00 */
 
-    --muted: 120 100% 5%;
-    --muted-foreground: 120 100% 40%;
+    --muted: 0 0% 4%; /* #0e0e0e */
+    --muted-foreground: 0 0% 67%; /* #ababab */
 
     --accent: 120 100% 50%;
     --accent-foreground: 0 0% 0%;
@@ -28,24 +28,27 @@
     --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 0%;
 
-    --border: 120 100% 30%;
-    --input: 120 100% 20%;
-    --ring: 120 100% 50%;
+    --border: 0 0% 28%; /* #484848 */
+    --input: 0 0% 12%; /* #1f1f1f */
+    --ring: 120 100% 50%; /* #00FF00 */
 
     --radius: 0rem;
+    
+    --terminal-primary-glow: 100 100% 77%; /* #9fff88 */
+    --terminal-tertiary: 0 0% 20%; /* #333333 */
   }
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-mono antialiased;
+    @apply bg-background text-foreground antialiased;
     text-shadow: 0 0 5px rgba(0, 255, 0, 0.5); /* Phosphor glow effect */
   }
 
   /* TUI-like scrollbars */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-background border border-border;
@@ -64,8 +67,8 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background: linear-gradient(rgba(159, 255, 136, 0.03) 50%, transparent 50%);
   z-index: 50;
-  background-size: 100% 2px, 3px 100%;
+  background-size: 100% 4px;
   pointer-events: none;
 }

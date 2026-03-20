@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Infralyzer - Infrastructure Sizing & Cost Prediction",
@@ -19,13 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={spaceGrotesk.className}>
         <I18nProvider>
           <div className="min-h-screen bg-background text-foreground flex flex-col">
             <main className="flex-grow">
               {children}
             </main>
-            <Footer />
           </div>
         </I18nProvider>
       </body>

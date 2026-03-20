@@ -117,19 +117,19 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b-2 border-primary border-dashed pb-2">
-        <h3 className="text-lg font-bold tracking-widest uppercase text-primary">{t('estimatedCosts')}</h3>
+    <div className="space-y-6 mt-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-terminal-tertiary/30 border-dashed pb-4">
+        <h3 className="text-sm font-bold tracking-widest uppercase text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)]">ESTIMATED MONTHLY TRAJECTORY COSTS</h3>
         {cacheTime && !isLoading && (
-          <span className="text-xs font-bold tracking-widest uppercase px-2 py-1 bg-black text-primary border border-primary">
-            {t('lastUpdated', { time: cacheTime })}
+          <span className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 border border-terminal-primary text-terminal-primary bg-terminal-primary/5">
+            PRICING API CACHED AT: {cacheTime}
           </span>
         )}
       </div>
 
       {isLoading && !hideLoader ? (
-        <div className="flex justify-center items-center text-sm text-primary font-bold animate-pulse p-6 border border-primary bg-black tracking-widest uppercase">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <div className="flex justify-center items-center text-xs text-terminal-primary font-bold animate-pulse p-6 border border-terminal-primary/30 border-dashed bg-terminal-black tracking-widest uppercase">
+          <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-terminal-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -137,9 +137,9 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
         </div>
       ) : (
         <>
-          <TuiBanner className="mt-0">
-            {t('sysInfoPricing', { rate: exchangeRate.toFixed(2) })}
-          </TuiBanner>
+          <div className="mt-0 mb-6 border border-terminal-primary border-dashed p-4 text-[10px] font-bold tracking-widest text-terminal-primary uppercase bg-terminal-black/30 drop-shadow-[0_0_3px_rgba(0,255,0,0.5)]">
+            {'> '} SYS_INFO: PRICING SOURCED FROM PUBLIC CLOUD APIS. USD TO BRL CONVERSION (@{exchangeRate.toFixed(2)}) VIA OPEN.ER-API.COM.
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {PROVIDERS.map(p => {
               const data = pricing[p.id];

@@ -48,12 +48,18 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
   }
 
   return (
-    <div className="w-full bg-black border border-primary/30 p-4 relative scanlines group hover:border-primary transition-colors duration-500">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b border-primary/20 pb-2">
-        <h3 className="text-sm font-bold tracking-widest uppercase text-primary">
+    <div className="w-full bg-terminal-black border border-terminal-tertiary/20 p-6 relative group hover:border-terminal-primary/40 transition-colors duration-500 mt-6">
+      <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-terminal-primary"></div>
+      <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-terminal-primary"></div>
+      <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-terminal-primary"></div>
+      <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-terminal-primary"></div>
+
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-[11px] font-bold tracking-widest uppercase text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)]">
           {'>'} Peak vs Normal Traffic ({metrics.PeakFactor || 1.0}x Factor)
         </h3>
       </div>
+      <div className="border-b border-terminal-tertiary/30 border-dashed w-full block mb-6 -mt-2"></div>
       
       <div className="h-[250px] w-full">
         <ResponsiveContainer width="100%" height="100%">

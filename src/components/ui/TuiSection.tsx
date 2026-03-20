@@ -9,21 +9,21 @@ interface TuiSectionProps {
 }
 
 export function TuiSection({ title, children, className = "", sectionRef, variant = 'left' }: TuiSectionProps) {
-  const cornerClasses = variant === 'left' 
-    ? "before:top-0 before:left-0 before:border-t-4 before:border-l-4 after:bottom-0 after:right-0 after:border-b-4 after:border-r-4"
-    : "before:top-0 before:right-0 before:border-t-4 before:border-r-4 after:bottom-0 after:left-0 after:border-b-4 after:border-l-4";
-
   return (
     <section
       ref={sectionRef}
-      className={`w-full bg-black border-2 border-primary p-6 flex flex-col relative 
-        before:content-[''] before:absolute before:w-4 before:h-4 before:border-primary 
-        after:content-[''] after:absolute after:w-4 after:h-4 after:border-primary 
-        ${cornerClasses} ${className}`}
+      className={`w-full bg-terminal-neutral border border-terminal-tertiary/20 p-6 flex flex-col relative shadow-[0_0_20px_rgba(0,0,0,0.8)]
+        ${className}`}
     >
+      <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-terminal-primary"></div>
+      <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-terminal-primary"></div>
+      <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-terminal-primary"></div>
+      <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-terminal-primary"></div>
+      
       {title && (
-        <h2 className="text-2xl font-bold mb-6 bg-primary text-primary-foreground self-start px-2 py-1 uppercase tracking-widest leading-none">
-          {title}
+        <h2 className="text-sm font-bold tracking-widest mb-6 flex items-center gap-2 uppercase">
+          <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">{'>'}</span> 
+          [ {title} ]
         </h2>
       )}
       {children}

@@ -47,64 +47,79 @@ export function MetricSlider({
   };
 
   return (
-    <TuiFormGroup>
-      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2">
-        <label className="text-sm font-semibold text-foreground tracking-tight flex items-center xl:max-w-[50%]" htmlFor={name}>
+    <TuiFormGroup className="mb-6 pb-6 border-b border-terminal-tertiary/30 border-dashed last:border-0 last:pb-0">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2 mb-4">
+        <label className="text-xs text-muted-foreground tracking-widest flex items-center xl:max-w-[50%] uppercase" htmlFor={name}>
           <span className="break-words">{label}</span>
           {infoText && <InfoTooltip content={infoText} />}
         </label>
         <div className="flex items-center gap-2 shrink-0 self-start xl:self-auto">
           {editable ? (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => onValueChange(name, Math.max(min, value - (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-none border border-primary/50 bg-black hover:bg-primary/20 text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
+                className="h-10 w-10 flex items-center justify-center rounded-none bg-terminal-secondary border border-terminal-tertiary hover:bg-terminal-primary hover:text-terminal-black transition-all active:scale-95"
               >
-                <Minus className="h-3.5 w-3.5" />
+                <Minus className="h-4 w-4" />
               </button>
               <input
                 type="number"
                 name={name}
                 value={value || ""}
                 onChange={handleChange}
-                className="w-20 text-center text-sm font-bold bg-black text-primary px-2 py-1 rounded-none shadow-none border border-primary/50 hover:border-primary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
+                className="w-24 text-center text-xl font-bold bg-terminal-neutral text-terminal-primary px-2 py-1 rounded-none shadow-none border border-terminal-tertiary hover:border-terminal-primary focus:border-terminal-primary focus:outline-none focus:ring-1 focus:ring-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
               />
               <button
                 type="button"
-                onClick={() => onValueChange(name, Math.min(max, value + (step || 1)))}
-                className="h-7 w-7 flex items-center justify-center rounded-none border border-primary/50 bg-black hover:bg-primary/20 text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
+                onClick={() => onValueChange(name, Math.max(max, value + (step || 1)))}
+                className="h-10 w-10 flex items-center justify-center rounded-none bg-terminal-secondary border border-terminal-tertiary hover:bg-terminal-primary hover:text-terminal-black transition-all active:scale-95"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-4 w-4" />
               </button>
             </div>
           ) : (
-            <div className="text-sm font-bold bg-black text-primary border border-primary/50 px-3 py-1 rounded-none shadow-none">
+            <div className="text-xl font-bold bg-terminal-neutral text-terminal-primary border border-terminal-tertiary px-3 py-1 rounded-none shadow-none drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">
               {value.toLocaleString()}
             </div>
           )}
-          {suffix && <span className="text-xs text-primary font-bold uppercase whitespace-nowrap tracking-widest">{suffix}</span>}
+          {suffix && <span className="text-[10px] text-muted-foreground font-bold uppercase whitespace-nowrap tracking-widest">{suffix}</span>}
         </div>
       </div>
-      <input
-        id={name}
-        name={name}
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={handleChange}
-        className="w-full h-2 appearance-none cursor-pointer bg-secondary/50 outline-none hover:bg-secondary transition-all [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-none [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-none"
-      />
+      
+      <div className="relative h-8 flex items-center mt-2">
+        <div className="absolute left-0 right-0 h-1 bg-terminal-tertiary top-1/2 -translate-y-1/2">
+           <div className="h-full bg-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)]" style={{ width: `${Math.min(100, ((value - min) / (max - min)) * 100)}%` }}></div>
+        </div>
+        <input
+          id={name}
+          name={name}
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={handleChange}
+          className="absolute w-full h-full opacity-0 cursor-pointer z-10"
+        />
+        <div 
+          className="absolute w-2 h-6 bg-terminal-primary border border-terminal-black pointer-events-none drop-shadow-[0_0_8px_rgba(0,255,0,0.8)] top-1/2 -translate-y-1/2 transform -translate-x-1/2 transition-all duration-75"
+          style={{ left: `${Math.min(100, ((value - min) / (max - min)) * 100)}%` }}
+        ></div>
+      </div>
+
       {presets.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="grid grid-cols-5 gap-1 mt-4">
           {presets.map((preset) => (
             <button
               key={preset.label}
               type="button"
               onClick={() => onValueChange(name, preset.value)}
-              className="px-2.5 py-1 text-xs font-bold tracking-wider rounded-none border border-primary/50 bg-black hover:bg-primary/20 hover:border-primary text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary"
+              className={`text-[10px] py-2 border transition-colors flex items-center justify-center ${
+                value === preset.value
+                  ? 'bg-terminal-primary text-terminal-black border-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.4)]' 
+                  : 'bg-transparent text-muted-foreground border-terminal-tertiary hover:border-terminal-primary/50'
+              }`}
             >
               {preset.label}
             </button>

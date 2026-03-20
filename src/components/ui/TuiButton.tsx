@@ -9,10 +9,10 @@ export function TuiButton({ children, loading, className = "", ...props }: TuiBu
     <button
       {...props}
       disabled={props.disabled || loading}
-      className={`w-full bg-primary text-primary-foreground font-bold py-3 uppercase tracking-widest border-2 border-primary transition-colors focus:ring-0 focus:outline-none 
-        ${loading ? 'opacity-70 cursor-wait' : 'hover:bg-transparent hover:text-primary'} ${className}`}
+      className={`w-full bg-terminal-primary text-terminal-black font-bold py-5 uppercase tracking-widest flex items-center justify-center gap-3 text-lg transition-all active:scale-[0.98] focus:ring-0 focus:outline-none shadow-[0_0_15px_rgba(0,253,0,0.4)]
+        ${loading ? 'opacity-70 cursor-wait' : 'hover:bg-terminal-primary-glow'} ${className}`}
     >
-      [ {children} ]
+      {loading ? <span className="animate-pulse">_PROCESSING</span> : children}
     </button>
   );
 }

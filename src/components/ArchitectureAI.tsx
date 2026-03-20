@@ -154,23 +154,23 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
   };
 
   return (
-    <div className="w-full mt-8">
-      <h3 className="text-lg font-black tracking-widest uppercase text-primary mb-4 flex items-center gap-2">
-        <Zap size={20} className="fill-primary" /> {t('aiInsights')}
+    <div className="w-full mt-10">
+      <h3 className="text-sm font-bold tracking-widest uppercase text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)] flex items-center gap-2 mb-6">
+        <Zap size={16} className="fill-terminal-primary text-terminal-primary" /> {'>'} {t('aiInsights')}
       </h3>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         {insights.map((insight, idx) => (
-          <TuiBanner key={idx} className="!mt-0 !mb-0 flex flex-col gap-2 group hover:border-primary transition-colors bg-background/50">
+          <div key={idx} className="flex flex-col gap-2 p-4 border border-terminal-primary border-dashed bg-terminal-black/30 group hover:border-solid hover:bg-terminal-primary/5 transition-all">
             <div className="flex items-center gap-2">
               <span className="p-1">{insight.icon}</span>
-              <h4 className="font-bold text-sm tracking-wide text-primary uppercase">
+              <h4 className="font-bold text-[11px] tracking-widest text-terminal-primary uppercase drop-shadow-[0_0_3px_rgba(0,255,0,0.5)]">
                 {insight.title}
               </h4>
             </div>
-            <p className="text-xs text-primary/80 leading-relaxed normal-case font-normal">
+            <p className="text-[11px] tracking-wider text-terminal-primary/80 leading-relaxed normal-case mt-1 ml-9">
               {renderHighlightedDesc(insight.desc, insight.terms)}
             </p>
-          </TuiBanner>
+          </div>
         ))}
       </div>
     </div>

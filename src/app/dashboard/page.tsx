@@ -16,12 +16,14 @@ import { StorageEvolutionChart } from "@/components/charts/StorageEvolutionChart
 import { ArchitectureAI } from "@/components/ArchitectureAI";
 import { PeakComparisonChart } from "@/components/charts/PeakComparisonChart";
 
+import { LayoutGrid, BarChart2, Server, Terminal, Calculator } from "lucide-react";
+
 export default function DashboardPage() {
   const { t } = useTranslation();
 
   const [metrics, setMetrics] = useState<BusinessMetrics>({
-    DAU: 100000,
-    RequestsPerUser: 50,
+    DAU: 1250000,
+    RequestsPerUser: 42,
     PeakFactor: 2.0,
     ReadRatioPercentage: 80,
     WriteRatioPercentage: 20,
@@ -46,25 +48,32 @@ export default function DashboardPage() {
   const projections = useMemo(() => calculateInfrastructure(activeMetrics), [activeMetrics]);
   const normalProjections = useMemo(() => calculateInfrastructure({ ...activeMetrics, PeakFactor: 1.0 }), [activeMetrics]);
 
-
-
   return (
-    <main id="pdf-report-content" className="container mx-auto p-4 md:p-8 scanlines relative min-h-screen bg-black">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b-2 border-primary border-dashed pb-4 max-w-5xl mx-auto">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight uppercase">
-            <span className="text-primary">{'>'}</span> {t('dashboardTitle')} <span className="animate-pulse font-black text-primary">_</span>
-          </h1>
-          <p className="text-muted-foreground mt-2 uppercase tracking-wide">
-            $ {t('dashboardDesc')}
-          </p>
-        </div>
-        <div className="bg-card border border-primary p-2">
+    <main id="pdf-report-content" className="min-h-screen bg-terminal-black text-terminal-primary font-sans uppercase flex flex-col scanlines relative selection:bg-terminal-primary selection:text-terminal-black overflow-x-hidden md:max-w-4xl mx-auto border-x border-terminal-tertiary/20">
+      
+      <header className="flex justify-between items-center p-4 border-b border-terminal-tertiary/30 bg-terminal-neutral/50 backdrop-blur-sm z-10 sticky top-0">
+        <h1 className="text-xl tracking-widest font-bold drop-shadow-[0_0_8px_rgba(0,255,0,0.8)]">
+          INFRALYZER_DB <span className="animate-pulse">_</span>
+        </h1>
+        <div className="text-terminal-primary scale-90 origin-right">
           <LanguageSwitcher />
+        </div>
+      </header>
+
+      <div className="bg-terminal-secondary py-2 px-4 flex flex-col gap-1 border-b border-terminal-tertiary/30">
+        <div className="text-[10px] text-muted-foreground tracking-widest font-mono">SYSTEM STATUS</div>
+        <div className="flex justify-between items-center">
+          <div className="text-sm font-bold tracking-widest">PROJECTION_CMD</div>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="tracking-widest">LIVE_FEED</span>
+            <div className="w-2 h-2 rounded-full bg-terminal-primary animate-pulse shadow-[0_0_5px_rgba(0,255,0,0.8)]"></div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
+      <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
+
+      <div className="grid grid-cols-1 gap-6 w-full">
         {/* Left Side: Inputs */}
         <TuiSection title={t('businessMetrics')} variant="left">
           
@@ -72,7 +81,7 @@ export default function DashboardPage() {
 
           <MetricsForm metrics={metrics} onChange={handleMetricsChange} />
 
-          <div className="mt-8 pt-4 mt-auto">
+          <div className="mt-8 pt-4 mt-auto border-t border-terminal-tertiary/30 border-dashed">
             <TuiButton
               onClick={() => {
                 if (isCalculating) return;
@@ -86,12 +95,13 @@ export default function DashboardPage() {
                 }, 2000);
               }}
               loading={isCalculating}
+              className="w-full py-5 text-lg flex items-center justify-center gap-3 active:scale-[0.98]"
             >
-              {isCalculating ? t('processingButton') : t('calculateButton', { defaultValue: 'Calculate Projections' })}
+              <span>[ {isCalculating ? t('processingButton') : t('calculateButton', { defaultValue: 'Calculate Projections' })} ]</span>
+              {!isCalculating && <Calculator size={20} />}
             </TuiButton>
           </div>
         </TuiSection>
-
         {/* Right Side: Outputs */}
         <TuiSection
           variant="right"
@@ -107,8 +117,9 @@ export default function DashboardPage() {
               {/* Invisível, mas no DOM para permitir que o Componente filho `CostEstimation` rode o effect dele */}
               <div className={`${isCalculating || isEstimating ? 'hidden' : 'block'} space-y-6`}>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                  <h2 className="text-2xl font-bold mb-2 bg-primary text-primary-foreground self-start px-2 py-1 inline-block tracking-widest leading-none">
-                    {t('technicalProjections')}
+                  <h2 className="text-sm font-bold tracking-widest mb-6 flex items-center gap-2 uppercase">
+                    <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">{'>'}</span> 
+                    [ {t('technicalProjections')} ]
                   </h2>
                   <div>
                       <ExportPDFButton 
@@ -123,7 +134,7 @@ export default function DashboardPage() {
 
 
 
-                <div className="space-y-6 bg-black p-4 -mx-4 rounded border-2 border-transparent">
+                <div className="space-y-6 bg-terminal-black p-4 -mx-4 border border-terminal-tertiary/20">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <TuiDataBox
                       label={t('avgQPS')}
@@ -152,8 +163,11 @@ export default function DashboardPage() {
                     />
                   </div>
 
-                  <div className="border border-primary border-dashed my-6"></div>
-                  <h3 className="text-lg font-bold tracking-widest uppercase">{'>'} {t('monthlyAccumulation')}</h3>
+                  <div className="border border-terminal-tertiary/30 border-dashed my-6"></div>
+                  <h3 className="text-sm font-bold tracking-widest uppercase flex items-center gap-2">
+                    <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">{'>'}</span> 
+                    [ {t('monthlyAccumulation')} ]
+                  </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <TuiDataBox
                       label={t('monthlyEgress')}
@@ -185,6 +199,21 @@ export default function DashboardPage() {
           )}
         </TuiSection>
       </div>
+      </div>
+
+      <footer className="mt-auto bg-terminal-black border-t border-terminal-primary/30 p-8 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold text-terminal-primary/60 tracking-widest uppercase">
+        <div>© 2026 INFRALYZER - VERSION 1.0.0</div>
+        <div className="mt-4 md:mt-0">
+          <a
+            href="https://github.com/matheusjfa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors flex items-center gap-2"
+          >
+            <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">{'>'}</span> DEVELOPED BY MATHEUSJFA
+          </a>
+        </div>
+      </footer>
     </main>
   );
 }

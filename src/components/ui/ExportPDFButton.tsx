@@ -317,9 +317,9 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
   };
 
   return (
-    <TuiButton onClick={handleExport} loading={isExporting} className="gap-2 flex items-center justify-center max-w-[280px]">
-      <Download size={20} className="mr-2" />
-      {isExporting ? t('exportPdfLoading') : t('exportPdf')}
+    <TuiButton onClick={handleExport} loading={isExporting} className="gap-3 flex items-center justify-center min-w-[200px] active:scale-[0.98]">
+      <Download size={18} />
+      <span>[ {isExporting ? t('exportPdfLoading') : t('exportPdf')} ]</span>
     </TuiButton>
   );
 }

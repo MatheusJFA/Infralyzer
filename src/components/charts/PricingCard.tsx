@@ -65,38 +65,39 @@ export function PricingCard({
   const theme = themeConfigs[themeColor];
 
   return (
-    <div className="w-full p-4 bg-black border border-primary/50 hover:border-primary transition-all duration-300 relative group uppercase">
-      <div className="flex justify-between items-start mb-4">
-        <p className="text-xs text-primary/70 font-bold tracking-widest">{providerTitle}</p>
-        <div className={`px-2 py-0.5 border ${theme.border} ${theme.text} text-[10px] font-black bg-black`}>
+    <div className="w-full p-6 bg-terminal-black border border-terminal-tertiary/20 hover:border-terminal-primary/40 transition-all duration-300 relative group uppercase">
+      
+      <div className="flex justify-between items-start mb-6">
+        <p className={`text-[11px] ${theme.text} font-bold tracking-widest`}>{providerTitle}</p>
+        <div className={`px-2 py-0.5 border ${theme.border} ${theme.text} text-[9px] font-black bg-transparent`}>
           {providerCode.replace('[', '').replace(']', '')}
         </div>
       </div>
 
       <div className="relative z-10">
-        <div className="mb-4">
-          <p className="text-2xl font-black text-primary tracking-tighter">
+        <div className="mb-6">
+          <p className="text-2xl font-black text-terminal-primary tracking-tighter drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]">
             ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            <span className="text-xs font-bold text-primary/70 tracking-widest ml-1">{t('mo')}</span>
+            <span className="text-[10px] font-bold text-terminal-primary/70 tracking-widest ml-1">{t('mo', { defaultValue: '/MO' })}</span>
           </p>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="text-sm font-bold text-primary/80">
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-[11px] font-bold text-terminal-primary/90">
               ~ R$ {totalBrl.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
-            <span className={`text-[9px] px-1 border font-black ${isMocked ? 'border-primary/30 text-primary/50' : 'border-primary text-primary'}`}>
-              {isMocked ? t('mocked') : t('live')}
+            <span className={`text-[8px] px-1 border font-black tracking-widest ${isMocked ? 'border-terminal-tertiary/30 text-terminal-tertiary' : 'border-terminal-primary text-terminal-primary'}`}>
+              {isMocked ? t('mocked') : t('live', { defaultValue: 'LIVE' })}
             </span>
           </div>
         </div>
 
-        <div className="space-y-1.5 text-xs border-t border-dashed border-primary/30 pt-3 group-hover:border-primary/50 transition-colors">
-          <div className="flex justify-between text-primary/80">
-            <span className="tracking-widest opacity-80">{t('storageCost')}</span>
-            <span className="font-bold text-primary">${storageCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        <div className="space-y-2 text-[10px] tracking-widest border-t border-dashed border-terminal-tertiary/30 pt-4 mt-6 group-hover:border-terminal-primary/50 transition-colors">
+          <div className="flex justify-between text-terminal-primary/80">
+            <span className="opacity-80">{t('storageCost', { defaultValue: 'STORAGE COST' })}</span>
+            <span className="font-bold text-terminal-primary/90">${storageCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
-          <div className="flex justify-between text-primary/80">
-            <span className="tracking-widest opacity-80">{t('dataEgress')}</span>
-            <span className="font-bold text-primary">${egressCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <div className="flex justify-between text-terminal-primary/80">
+            <span className="opacity-80">{t('dataEgress', { defaultValue: 'DATA EGRESS' })}</span>
+            <span className="font-bold text-terminal-primary/90">${egressCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
       </div>
