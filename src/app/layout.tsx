@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 import { I18nProvider } from "@/lib/i18n/I18nContext";
-import { Footer } from "@/components/ui/Footer";
 
 export default function RootLayout({
   children,
