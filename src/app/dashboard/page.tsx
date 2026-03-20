@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef } from "react";
 import { useTranslation } from "@/lib/i18n/I18nContext";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { MetricsForm, MetricSlider } from "@/components/forms/MetricsForm";
+import { MetricsForm } from "@/components/forms/MetricsForm";
 import { CostEstimation } from "@/components/charts/CostEstimation";
 import { calculateInfrastructure } from "@/lib/core/engine";
 import type { BusinessMetrics } from "@/types";
@@ -19,7 +19,7 @@ import { PeakComparisonChart } from "@/components/charts/PeakComparisonChart";
 export default function DashboardPage() {
   const { t } = useTranslation();
 
-  const [scenarios, setScenarios] = useState<BusinessMetrics[]>([{
+  const [metrics, setMetrics] = useState<BusinessMetrics>({
     DAU: 100000,
     RequestsPerUser: 50,
     PeakFactor: 2.0,
@@ -29,34 +29,10 @@ export default function DashboardPage() {
     AvgResponseSizeBytes: 2048,
     RetentionDays: 30,
     ReplicationFactor: 3,
-  }]);
-
-  const [activeInputTab, setActiveInputTab] = useState(0);
-  const [activeResultTab, setActiveResultTab] = useState(0);
-
-  const handleScenarioCountChange = (count: number) => {
-    setScenarios(prev => {
-      const next = [...prev];
-      if (count > prev.length) {
-        for (let i = prev.length; i < count; i++) {
-          next.push({ ...prev[prev.length - 1] });
-        }
-      } else if (count < prev.length) {
-        next.splice(count);
-      }
-      return next;
-    });
-    if (activeInputTab >= count) setActiveInputTab(count - 1);
-    if (activeResultTab >= count) setActiveResultTab(count - 1);
-    setHasCalculated(false);
-  };
+  });
 
   const handleMetricsChange = (newMetrics: BusinessMetrics) => {
-    setScenarios(prev => {
-      const next = [...prev];
-      next[activeInputTab] = newMetrics;
-      return next;
-    });
+    setMetrics(newMetrics);
     setHasCalculated(false); 
   }
 
@@ -66,7 +42,7 @@ export default function DashboardPage() {
   const [pricingData, setPricingData] = useState<any>(null);
   const resultsRef = useRef<HTMLElement>(null);
 
-  const activeMetrics = scenarios[activeResultTab] || scenarios[0];
+  const activeMetrics = metrics;
   const projections = useMemo(() => calculateInfrastructure(activeMetrics), [activeMetrics]);
   const normalProjections = useMemo(() => calculateInfrastructure({ ...activeMetrics, PeakFactor: 1.0 }), [activeMetrics]);
 
@@ -92,39 +68,9 @@ export default function DashboardPage() {
         {/* Left Side: Inputs */}
         <TuiSection title={t('businessMetrics')} variant="left">
           
-          <div className="mb-6 p-4 border border-primary/30 bg-black scanlines relative">
-            <MetricSlider
-              label="Number of Scenarios"
-              name="scenariosCount"
-              value={scenarios.length}
-              min={1}
-              max={5}
-              step={1}
-              onValueChange={(_, value) => handleScenarioCountChange(value)}
-              editable={true}
-              presets={[
-                { label: "1", value: 1 },
-                { label: "3", value: 3 },
-                { label: "5", value: 5 },
-              ]}
-            />
-          </div>
 
-          {scenarios.length > 1 && (
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-              {scenarios.map((_, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setActiveInputTab(idx)}
-                  className={`flex-1 min-w-[100px] py-2 px-4 text-xs font-bold tracking-widest uppercase border-2 transition-all whitespace-nowrap ${activeInputTab === idx ? 'bg-primary text-black border-primary' : 'bg-card text-primary border-primary/30 hover:border-primary'}`}
-                >
-                  Scenario {idx + 1}
-                </button>
-              ))}
-            </div>
-          )}
 
-          <MetricsForm metrics={scenarios[activeInputTab]} onChange={handleMetricsChange} />
+          <MetricsForm metrics={metrics} onChange={handleMetricsChange} />
 
           <div className="mt-8 pt-4 mt-auto">
             <TuiButton
@@ -168,26 +114,14 @@ export default function DashboardPage() {
                       <ExportPDFButton 
                         filename="infralyzer-report.pdf" 
                         metrics={activeMetrics}
-                        scenarios={scenarios}
+                        scenarios={[metrics]}
                         projections={projections} 
                         pricingData={pricingData} 
                       />
                   </div>
                 </div>
 
-                {scenarios.length > 1 && (
-                  <div className="flex gap-2 mb-4 overflow-x-auto pb-2 border-b border-primary/20">
-                    {scenarios.map((_, idx) => (
-                      <button 
-                        key={idx}
-                        onClick={() => setActiveResultTab(idx)}
-                        className={`py-2 px-6 text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap ${activeResultTab === idx ? 'bg-primary text-black border-b-2 border-primary' : 'bg-transparent text-primary/70 hover:text-primary hover:border-b-2 hover:border-primary/50'}`}
-                      >
-                        Results S{idx + 1}
-                      </button>
-                    ))}
-                  </div>
-                )}
+
 
                 <div className="space-y-6 bg-black p-4 -mx-4 rounded border-2 border-transparent">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
