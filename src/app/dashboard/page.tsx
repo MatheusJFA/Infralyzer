@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState, useMemo, useRef } from "react";
 import { useTranslation } from "@/lib/i18n/I18nContext";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -50,7 +52,7 @@ export default function DashboardPage() {
   const normalProjections = useMemo(() => calculateInfrastructure({ ...activeMetrics, PeakFactor: 1.0 }), [activeMetrics]);
 
   return (
-    <main id="pdf-report-content" className={`min-h-screen bg-terminal-black text-terminal-primary font-sans uppercase flex flex-col scanlines relative selection:bg-terminal-primary selection:text-terminal-black overflow-x-hidden mx-auto border-x border-terminal-tertiary/20 transition-all duration-700 ease-in-out ${hasCalculated ? 'max-w-[1400px]' : 'md:max-w-4xl'}`}>
+    <main id="pdf-report-content" className={`min-h-screen uppercase flex flex-col relative overflow-x-hidden mx-auto border-x border-terminal-tertiary/20 transition-all duration-700 ease-in-out px-4 md:px-0 w-full ${hasCalculated ? 'max-w-[1400px]' : 'md:max-w-4xl'}`}>
       
       <header className="flex justify-between items-center p-4 border-b border-terminal-tertiary/30 bg-terminal-neutral/50 backdrop-blur-sm z-10 sticky top-0">
         <h1 className="text-xl tracking-widest font-bold drop-shadow-[0_0_8px_rgba(0,255,0,0.8)]">
@@ -210,14 +212,21 @@ export default function DashboardPage() {
       </div>
       </div>
 
-      <footer className="mt-auto bg-terminal-black border-t border-terminal-primary/30 p-8 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold text-terminal-primary/60 tracking-widest uppercase">
-        <div>© 2026 INFRALYZER - VERSION 1.0.0</div>
-        <div className="mt-4 md:mt-0">
+      <footer className="mt-auto bg-terminal-black border-t border-terminal-primary/30 p-8 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold text-terminal-primary/60 tracking-widest uppercase gap-4 md:gap-0">
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+          <span>© 2026 INFRALYZER - VERSION 1.0.0</span>
+          <Link href="/design-system" className="hover:text-terminal-primary transition-colors flex items-center gap-1 group">
+            <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">[</span>
+            <span className="group-hover:text-terminal-primary transition-colors">DESIGN SYSTEM</span>
+            <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">]</span>
+          </Link>
+        </div>
+        <div>
           <a
             href="https://github.com/matheusjfa"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-primary transition-colors flex items-center gap-2"
+            className="hover:text-terminal-primary transition-colors flex items-center gap-2"
           >
             <span className="text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">{'>'}</span> DEVELOPED BY MATHEUSJFA
           </a>

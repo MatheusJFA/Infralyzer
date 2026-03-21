@@ -18,9 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={spaceGrotesk.className}>
+      <body className={`${spaceGrotesk.className} bg-terminal-black min-h-screen w-full text-terminal-primary scanlines selection:bg-terminal-primary selection:text-terminal-black font-sans relative`}>
         <I18nProvider>
-          <div className="min-h-screen bg-background text-foreground flex flex-col">
+          <div className="min-h-screen flex flex-col">
             <main className="flex-grow">
               {children}
             </main>
