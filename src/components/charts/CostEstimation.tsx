@@ -27,7 +27,7 @@ const PROVIDERS = [
 ];
 
 export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, hideLoader = false }: CostEstimationProps) {
-  const { t } = useTranslation();
+  const { t, formatNumber } = useTranslation();
   
   const [pricing, setPricing] = useState<Record<string, PricingData>>(
     Object.fromEntries(PROVIDERS.map(p => [p.id, { storage: 0, egress: 0, isMocked: true }]))
@@ -138,7 +138,7 @@ export function CostEstimation({ projections, onLoadingChange, onPricingLoaded, 
       ) : (
         <>
           <div className="mt-0 mb-6 border border-terminal-primary border-dashed p-4 text-[10px] font-bold tracking-widest text-terminal-primary uppercase bg-terminal-black/30 drop-shadow-[0_0_3px_rgba(0,255,0,0.5)]">
-            {'> '} SYS_INFO: PRICING SOURCED FROM PUBLIC CLOUD APIS. USD TO BRL CONVERSION (@{exchangeRate.toFixed(2)}) VIA OPEN.ER-API.COM.
+            {'> '} SYS_INFO: PRICING SOURCED FROM PUBLIC CLOUD APIS. USD TO BRL CONVERSION (@{formatNumber(exchangeRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) VIA OPEN.ER-API.COM.
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {PROVIDERS.map(p => {

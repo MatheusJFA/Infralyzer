@@ -61,7 +61,7 @@ export function PricingCard({
   egressCostUsd,
   themeColor,
 }: PricingCardProps) {
-  const { t } = useTranslation();
+  const { t, formatNumber } = useTranslation();
   const theme = themeConfigs[themeColor];
 
   return (
@@ -77,12 +77,12 @@ export function PricingCard({
       <div className="relative z-10">
         <div className="mb-6">
           <p className="text-2xl font-black text-terminal-primary tracking-tighter drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]">
-            ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ${formatNumber(totalUsd, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             <span className="text-[10px] font-bold text-terminal-primary/70 tracking-widest ml-1">{t('mo', { defaultValue: '/MO' })}</span>
           </p>
           <div className="flex items-center gap-2 mt-2">
             <p className="text-[11px] font-bold text-terminal-primary/90">
-              ~ R$ {totalBrl.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ~ R$ {formatNumber(totalBrl, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <span className={`text-[8px] px-1 border font-black tracking-widest ${isMocked ? 'border-terminal-tertiary/30 text-terminal-tertiary' : 'border-terminal-primary text-terminal-primary'}`}>
               {isMocked ? t('mocked') : t('live', { defaultValue: 'LIVE' })}
@@ -93,11 +93,11 @@ export function PricingCard({
         <div className="space-y-2 text-[10px] tracking-widest border-t border-dashed border-terminal-tertiary/30 pt-4 mt-6 group-hover:border-terminal-primary/50 transition-colors">
           <div className="flex justify-between text-terminal-primary/80">
             <span className="opacity-80">{t('storageCost', { defaultValue: 'STORAGE COST' })}</span>
-            <span className="font-bold text-terminal-primary/90">${storageCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="font-bold text-terminal-primary/90">${formatNumber(storageCostUsd, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
           <div className="flex justify-between text-terminal-primary/80">
             <span className="opacity-80">{t('dataEgress', { defaultValue: 'DATA EGRESS' })}</span>
-            <span className="font-bold text-terminal-primary/90">${egressCostUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="font-bold text-terminal-primary/90">${formatNumber(egressCostUsd, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
       </div>

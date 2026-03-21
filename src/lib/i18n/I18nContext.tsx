@@ -8,6 +8,9 @@ interface I18nContextType {
   locale: Language;
   setLocale: (lang: Language) => void;
   t: (key: TranslationKeys, params?: Record<string, string | number>) => string;
+  formatNumber: (num: number, options?: Intl.NumberFormatOptions) => string;
+  formatDataSize: (gb: number) => string;
+  getStorageDetails: (gb: number) => React.ReactNode;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -37,8 +40,43 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return str;
   };
 
+  const formatNumber = (num: number, options?: Intl.NumberFormatOptions) => {
+    return num.toLocaleString(locale === 'pt' ? 'pt-BR' : 'en-US', options);
+  };
+
+  const formatDataSize = (gb: number) => {
+    if (gb < 1024) return `${formatNumber(gb, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} GB`;
+    const tb = gb / 1024;
+    if (tb < 1024) return `${formatNumber(tb, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TB`;
+    const pb = tb / 1024;
+    if (pb < 1024) return `${formatNumber(pb, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} PB`;
+    const eb = pb / 1024;
+    return `${formatNumber(eb, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EB`;
+  };
+
+  const getStorageDetails = (gb: number) => {
+    const mb = gb * 1024;
+    const tb = gb / 1024;
+    return (
+      <div className="flex flex-col gap-1 text-left w-full mt-1">
+         <div className="flex justify-between items-center gap-4 border-b border-white/10 pb-1 mb-1">
+           <span className="opacity-70 text-[9px] uppercase tracking-widest">Megabytes</span>
+           <span className="font-bold text-terminal-primary">{formatNumber(mb, { maximumFractionDigits: 2 })} MB</span>
+         </div>
+         <div className="flex justify-between items-center gap-4 border-b border-white/10 pb-1 mb-1">
+           <span className="opacity-70 text-[9px] uppercase tracking-widest">Gigabytes</span>
+           <span className="font-bold text-terminal-primary">{formatNumber(gb, { maximumFractionDigits: 2 })} GB</span>
+         </div>
+         <div className="flex justify-between items-center gap-4">
+           <span className="opacity-70 text-[9px] uppercase tracking-widest">Terabytes</span>
+           <span className="font-bold text-terminal-primary">{formatNumber(tb, { maximumFractionDigits: 2 })} TB</span>
+         </div>
+      </div>
+    );
+  };
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale: changeLocale, t }}>
+    <I18nContext.Provider value={{ locale, setLocale: changeLocale, t, formatNumber, formatDataSize, getStorageDetails }}>
       {children}
     </I18nContext.Provider>
   );

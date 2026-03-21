@@ -15,11 +15,12 @@ import { ExportPDFButton } from "@/components/ui/ExportPDFButton";
 import { StorageEvolutionChart } from "@/components/charts/StorageEvolutionChart";
 import { ArchitectureAI } from "@/components/ArchitectureAI";
 import { PeakComparisonChart } from "@/components/charts/PeakComparisonChart";
+import { InfoTooltip } from "@/components/InfoTooltip";
 
 import { LayoutGrid, BarChart2, Server, Terminal, Calculator } from "lucide-react";
 
 export default function DashboardPage() {
-  const { t } = useTranslation();
+  const { t, formatNumber, formatDataSize, getStorageDetails } = useTranslation();
 
   const [metrics, setMetrics] = useState<BusinessMetrics>({
     DAU: 1250000,
@@ -49,7 +50,7 @@ export default function DashboardPage() {
   const normalProjections = useMemo(() => calculateInfrastructure({ ...activeMetrics, PeakFactor: 1.0 }), [activeMetrics]);
 
   return (
-    <main id="pdf-report-content" className="min-h-screen bg-terminal-black text-terminal-primary font-sans uppercase flex flex-col scanlines relative selection:bg-terminal-primary selection:text-terminal-black overflow-x-hidden md:max-w-4xl mx-auto border-x border-terminal-tertiary/20">
+    <main id="pdf-report-content" className={`min-h-screen bg-terminal-black text-terminal-primary font-sans uppercase flex flex-col scanlines relative selection:bg-terminal-primary selection:text-terminal-black overflow-x-hidden mx-auto border-x border-terminal-tertiary/20 transition-all duration-700 ease-in-out ${hasCalculated ? 'max-w-[1400px]' : 'md:max-w-4xl'}`}>
       
       <header className="flex justify-between items-center p-4 border-b border-terminal-tertiary/30 bg-terminal-neutral/50 backdrop-blur-sm z-10 sticky top-0">
         <h1 className="text-xl tracking-widest font-bold drop-shadow-[0_0_8px_rgba(0,255,0,0.8)]">
@@ -73,7 +74,7 @@ export default function DashboardPage() {
 
       <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
 
-      <div className="grid grid-cols-1 gap-6 w-full">
+      <div className={`grid grid-cols-1 w-full items-start gap-6 transition-all duration-700 ${hasCalculated ? 'xl:grid-cols-2' : ''}`}>
         {/* Left Side: Inputs */}
         <TuiSection title={t('businessMetrics')} variant="left">
           
@@ -106,7 +107,7 @@ export default function DashboardPage() {
         <TuiSection
           variant="right"
           sectionRef={resultsRef}
-          className={`transition-all duration-500 uppercase ${hasCalculated ? 'opacity-100 translate-y-0 relative mt-8' : 'opacity-0 translate-y-4 pointer-events-none absolute'}`}
+          className={`transition-all duration-700 uppercase ${hasCalculated ? 'opacity-100 translate-y-0 relative mt-8 xl:mt-0' : 'opacity-0 translate-y-4 pointer-events-none absolute'}`}
         >
           {hasCalculated && (
             <>
@@ -138,28 +139,28 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <TuiDataBox
                       label={t('avgQPS')}
-                      value={Math.round(projections.avgQPS).toLocaleString()}
+                      value={formatNumber(Math.round(projections.avgQPS))}
                       infoText={t('descAvgQPS')}
                     />
                     <TuiDataBox 
                       label={t('peakQPS')} 
-                      value={Math.round(projections.peakQPS).toLocaleString()} 
+                      value={formatNumber(Math.round(projections.peakQPS))} 
                       infoText={t('descPeakQPS')}
-                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `+${Math.round(projections.peakQPS - normalProjections.peakQPS).toLocaleString()} vs Normal` : undefined}
+                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `+${formatNumber(Math.round(projections.peakQPS - normalProjections.peakQPS))} vs Normal` : undefined}
                     />
                     <TuiDataBox 
                       label={t('readQPS')} 
-                      value={Math.round(projections.readQPS).toLocaleString()} 
+                      value={formatNumber(Math.round(projections.readQPS))} 
                       infoText={t('descReadQPS')} 
                       largeValue={false}
-                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `Peak: ~${Math.round(projections.readQPS * (activeMetrics.PeakFactor || 1)).toLocaleString()}` : undefined}
+                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `Peak: ~${formatNumber(Math.round(projections.readQPS * (activeMetrics.PeakFactor || 1)))}` : undefined}
                     />
                     <TuiDataBox 
                       label={t('writeQPS')} 
-                      value={Math.round(projections.writeQPS).toLocaleString()} 
+                      value={formatNumber(Math.round(projections.writeQPS))} 
                       infoText={t('descWriteQPS')} 
                       largeValue={false}
-                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `Peak: ~${Math.round(projections.writeQPS * (activeMetrics.PeakFactor || 1)).toLocaleString()}` : undefined}
+                      subValue={(activeMetrics.PeakFactor || 1) > 1.0 ? `Peak: ~${formatNumber(Math.round(projections.writeQPS * (activeMetrics.PeakFactor || 1)))}` : undefined}
                     />
                   </div>
 
@@ -171,12 +172,20 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <TuiDataBox
                       label={t('monthlyEgress')}
-                      value={`${projections.totalEgressGB.toFixed(2)} GB`}
+                      value={
+                        <InfoTooltip content={getStorageDetails(projections.totalEgressGB)}>
+                          <span className="cursor-help border-b border-terminal-primary/30 border-dashed hover:border-terminal-primary transition-colors">{formatDataSize(projections.totalEgressGB)}</span>
+                        </InfoTooltip>
+                      }
                       infoText={t('descEgress')}
                     />
                     <TuiDataBox
                       label={t('dbStorage')}
-                      value={`${projections.totalStorageGB.toFixed(2)} GB`}
+                      value={
+                        <InfoTooltip content={getStorageDetails(projections.totalStorageGB)}>
+                          <span className="cursor-help border-b border-terminal-primary/30 border-dashed hover:border-terminal-primary transition-colors">{formatDataSize(projections.totalStorageGB)}</span>
+                        </InfoTooltip>
+                      }
                       infoText={t('descStorage')}
                     />
                   </div>

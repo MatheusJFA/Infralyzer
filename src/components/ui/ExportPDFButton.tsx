@@ -14,7 +14,7 @@ interface ExportPDFButtonProps {
 }
 
 export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, scenarios, projections, pricingData }: ExportPDFButtonProps) {
-  const { t } = useTranslation();
+  const { t, formatNumber, formatDataSize, locale } = useTranslation();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {
@@ -39,7 +39,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
 
       doc.setFontSize(10);
       doc.setTextColor(secondaryColor);
-      doc.text(`Generated at: ${new Date().toLocaleString()}`, 14, 26);
+      doc.text(`Generated at: ${new Date().toLocaleString(locale === 'pt' ? 'pt-BR' : 'en-US')}`, 14, 26);
 
       doc.setDrawColor(0, 255, 0);
       doc.setLineWidth(0.5);
@@ -141,11 +141,11 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
         doc.setFontSize(11);
         doc.setTextColor(textColor);
         const metricsList = [
-          `Daily Active Users (DAU): ${scenarioMetrics.DAU.toLocaleString()}`,
-          `Requests per User/Day: ${scenarioMetrics.RequestsPerUser}`,
+          `Daily Active Users (DAU): ${formatNumber(scenarioMetrics.DAU)}`,
+          `Requests per User/Day: ${formatNumber(scenarioMetrics.RequestsPerUser)}`,
           `Read / Write Ratio: ${scenarioMetrics.ReadRatioPercentage}% / ${scenarioMetrics.WriteRatioPercentage}%`,
-          `Avg Write Payload: ${scenarioMetrics.AvgPayloadSizeBytes} Bytes`,
-          `Avg Read Response: ${scenarioMetrics.AvgResponseSizeBytes} Bytes`,
+          `Avg Write Payload: ${formatNumber(scenarioMetrics.AvgPayloadSizeBytes)} Bytes`,
+          `Avg Read Response: ${formatNumber(scenarioMetrics.AvgResponseSizeBytes)} Bytes`,
           `Database Retention: ${scenarioMetrics.RetentionDays} Days`,
           `Database Replication Factor: ${scenarioMetrics.ReplicationFactor || 3}`
         ];
@@ -177,14 +177,14 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
         const currentPeakFactor = scenarioMetrics.PeakFactor || 1.0;
 
         yPos = drawTable("Traffic Projections", ["Metric", "Normal Load (PF: 1.0)", `Peak Load (PF: ${currentPeakFactor}x)`], [
-          ["Total QPS (Queries Per Second)", Math.round(normalProjections.peakQPS).toLocaleString(), Math.round(currentProjections.peakQPS).toLocaleString()],
-          ["Read QPS (SELECTs)", Math.round(normalProjections.readQPS).toLocaleString(), Math.round(currentProjections.readQPS * currentPeakFactor).toLocaleString()],
-          ["Write QPS (MUTATIONs)", Math.round(normalProjections.writeQPS).toLocaleString(), Math.round(currentProjections.writeQPS * currentPeakFactor).toLocaleString()]
+          ["Total QPS (Queries Per Second)", formatNumber(Math.round(normalProjections.peakQPS)), formatNumber(Math.round(currentProjections.peakQPS))],
+          ["Read QPS (SELECTs)", formatNumber(Math.round(normalProjections.readQPS)), formatNumber(Math.round(currentProjections.readQPS * currentPeakFactor))],
+          ["Write QPS (MUTATIONs)", formatNumber(Math.round(normalProjections.writeQPS)), formatNumber(Math.round(currentProjections.writeQPS * currentPeakFactor))]
         ], yPos);
 
         yPos = drawTable("Monthly Accumulation", ["Resource Type", "Estimated Volume"], [
-          ["Database Storage (Total Required)", `${currentProjections.totalStorageGB.toFixed(2)} GB`],
-          ["Monthly Egress (Network Outbound)", `${currentProjections.totalEgressGB.toFixed(2)} GB`]
+          ["Database Storage (Total Required)", formatDataSize(currentProjections.totalStorageGB)],
+          ["Monthly Egress (Network Outbound)", formatDataSize(currentProjections.totalEgressGB)]
         ], yPos);
 
         // Section: Insights
@@ -253,7 +253,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
           doc.setFont("helvetica", "italic");
           doc.setFontSize(9);
           doc.setTextColor(secondaryColor);
-          doc.text(`Rates conversion applied: 1 USD = ${exchangeRate.toFixed(2)} BRL`, 14, yPos);
+          doc.text(`Rates conversion applied: 1 USD = ${formatNumber(exchangeRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BRL`, 14, yPos);
           yPos += 10;
 
           doc.setFont("helvetica", "bold");
@@ -270,13 +270,13 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
             const totalUSD = (currentProjections.totalStorageGB * data.storage) + (currentProjections.totalEgressGB * data.egress);
             const totalBRL = totalUSD * exchangeRate;
             
-            doc.text(`Storage (USD/GB): $${data.storage.toFixed(4)}`, startX, yPos + 6);
-            doc.text(`Egress (USD/GB): $${data.egress.toFixed(4)}`, startX, yPos + 12);
+            doc.text(`Storage (USD/GB): $${formatNumber(data.storage, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`, startX, yPos + 6);
+            doc.text(`Egress (USD/GB): $${formatNumber(data.egress, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`, startX, yPos + 12);
             
             doc.setFont("helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text(`Total: $${totalUSD.toFixed(2)}`, startX, yPos + 22);
-            doc.text(`R$ ${totalBRL.toFixed(2)}`, startX, yPos + 28);
+            doc.text(`Total: $${formatNumber(totalUSD, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, startX, yPos + 22);
+            doc.text(`R$ ${formatNumber(totalBRL, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, startX, yPos + 28);
             doc.setFontSize(12);
           };
 

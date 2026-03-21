@@ -13,7 +13,7 @@ interface StorageEvolutionChartProps {
 }
 
 export function StorageEvolutionChart({ metrics, projections }: StorageEvolutionChartProps) {
-  const { t } = useTranslation();
+  const { t, formatNumber, formatDataSize } = useTranslation();
 
   const data = useMemo(() => {
     const totalMonths = Math.ceil(metrics.RetentionDays / 30);
@@ -67,12 +67,12 @@ export function StorageEvolutionChart({ metrics, projections }: StorageEvolution
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#00ff00" opacity={0.1} vertical={false} />
             <XAxis dataKey="month" stroke="#00ff00" tick={{ fill: '#00ff00', opacity: 0.8, fontSize: 10, fontFamily: 'monospace' }} axisLine={{ stroke: '#00ff00', opacity: 0.3 }} tickLine={{ stroke: '#00ff00', opacity: 0.3 }} />
-            <YAxis stroke="#00ff00" tick={{ fill: '#00ff00', opacity: 0.8, fontSize: 10, fontFamily: 'monospace' }} tickFormatter={(value) => `${value} GB`} axisLine={{ stroke: '#00ff00', opacity: 0.3 }} tickLine={{ stroke: '#00ff00', opacity: 0.3 }} />
+            <YAxis stroke="#00ff00" tick={{ fill: '#00ff00', opacity: 0.8, fontSize: 10, fontFamily: 'monospace' }} tickFormatter={(value) => formatDataSize(value)} axisLine={{ stroke: '#00ff00', opacity: 0.3 }} tickLine={{ stroke: '#00ff00', opacity: 0.3 }} />
             <Tooltip 
               cursor={{ stroke: 'rgba(0, 255, 0, 0.2)', strokeWidth: 2 }}
               contentStyle={{ backgroundColor: 'black', border: '1px solid #00ff00', color: '#00ff00', fontFamily: 'monospace', textTransform: 'uppercase', fontSize: '12px' }} 
               itemStyle={{ color: '#00ff00', fontWeight: 'bold' }}
-              formatter={(value: number) => [`${value} GB`, t('dbStorage')]}
+              formatter={(value: number) => [formatDataSize(value), t('dbStorage')]}
             />
             <Area type="monotone" dataKey="storage" stroke="#00ff00" fillOpacity={1} fill="url(#colorStorage)" />
           </AreaChart>

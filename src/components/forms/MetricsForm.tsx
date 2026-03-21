@@ -42,18 +42,19 @@ export function MetricSlider({
   presets?: Preset[];
   infoText?: string;
 }) {
+  const { formatNumber } = useTranslation();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onValueChange(name, parseFloat(e.target.value) || 0);
   };
 
   return (
     <TuiFormGroup className="mb-6 pb-6 border-b border-terminal-tertiary/30 border-dashed last:border-0 last:pb-0">
-      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 xl:gap-2 mb-4">
-        <label className="text-xs text-muted-foreground tracking-widest flex items-center xl:max-w-[50%] uppercase" htmlFor={name}>
-          <span className="break-words">{label}</span>
+      <div className="flex flex-col justify-between items-start gap-3 mb-4">
+        <label className="text-[11px] text-muted-foreground tracking-widest flex items-center uppercase" htmlFor={name}>
+          <span className="break-words mr-2">{label}</span>
           {infoText && <InfoTooltip content={infoText} />}
         </label>
-        <div className="flex items-center gap-2 shrink-0 self-start xl:self-auto">
+        <div className="flex items-center gap-2 shrink-0 self-start max-w-full">
           {editable ? (
             <div className="flex items-center gap-2">
               <button
@@ -68,11 +69,11 @@ export function MetricSlider({
                 name={name}
                 value={value || ""}
                 onChange={handleChange}
-                className="w-24 text-center text-xl font-bold bg-terminal-neutral text-terminal-primary px-2 py-1 rounded-none shadow-none border border-terminal-tertiary hover:border-terminal-primary focus:border-terminal-primary focus:outline-none focus:ring-1 focus:ring-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
+                className="w-36 text-center text-xl font-bold bg-terminal-neutral text-terminal-primary px-2 py-1 rounded-none shadow-none border border-terminal-tertiary hover:border-terminal-primary focus:border-terminal-primary focus:outline-none focus:ring-1 focus:ring-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.5)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
               />
               <button
                 type="button"
-                onClick={() => onValueChange(name, Math.max(max, value + (step || 1)))}
+                onClick={() => onValueChange(name, Math.min(max, value + (step || 1)))}
                 className="h-10 w-10 flex items-center justify-center rounded-none bg-terminal-secondary border border-terminal-tertiary hover:bg-terminal-primary hover:text-terminal-black transition-all active:scale-95"
               >
                 <Plus className="h-4 w-4" />
@@ -80,7 +81,7 @@ export function MetricSlider({
             </div>
           ) : (
             <div className="text-xl font-bold bg-terminal-neutral text-terminal-primary border border-terminal-tertiary px-3 py-1 rounded-none shadow-none drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">
-              {value.toLocaleString()}
+              {formatNumber(value)}
             </div>
           )}
           {suffix && <span className="text-[10px] text-muted-foreground font-bold uppercase whitespace-nowrap tracking-widest">{suffix}</span>}
@@ -89,7 +90,7 @@ export function MetricSlider({
       
       <div className="relative h-8 flex items-center mt-2">
         <div className="absolute left-0 right-0 h-1 bg-terminal-tertiary top-1/2 -translate-y-1/2">
-           <div className="h-full bg-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)]" style={{ width: `${Math.min(100, ((value - min) / (max - min)) * 100)}%` }}></div>
+           <div className="h-full bg-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)]" style={{ width: `${Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100))}%` }}></div>
         </div>
         <input
           id={name}
@@ -104,7 +105,7 @@ export function MetricSlider({
         />
         <div 
           className="absolute w-2 h-6 bg-terminal-primary border border-terminal-black pointer-events-none drop-shadow-[0_0_8px_rgba(0,255,0,0.8)] top-1/2 -translate-y-1/2 transform -translate-x-1/2 transition-all duration-75"
-          style={{ left: `${Math.min(100, ((value - min) / (max - min)) * 100)}%` }}
+          style={{ left: `${Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100))}%` }}
         ></div>
       </div>
 
@@ -157,7 +158,7 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
         name="DAU"
         value={metrics.DAU}
         min={1000}
-        max={5000000}
+        max={100000000}
         step={5000}
         onValueChange={handleValueChange}
         suffix={t('users')}
@@ -169,6 +170,9 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           { label: "500k", value: 500000 },
           { label: "1M", value: 1000000 },
           { label: "5M", value: 5000000 },
+          { label: "10M", value: 10000000 },
+          { label: "50M", value: 50000000 },
+          { label: "100M", value: 100000000 },
         ]}
       />
 
@@ -178,7 +182,7 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           name="RequestsPerUser"
           value={metrics.RequestsPerUser}
           min={1}
-          max={1000}
+          max={10000}
           step={5}
           onValueChange={handleValueChange}
           suffix={t('reqs')}
@@ -190,7 +194,9 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
             { label: "50", value: 50 },
             { label: "150", value: 150 },
             { label: "500", value: 500 },
-            { label: "1000", value: 1000 }
+            { label: "1000", value: 1000 },
+            { label: "5000", value: 5000 },
+            { label: "10000", value: 10000 },
           ]}
         />
 
@@ -228,7 +234,7 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           name="AvgPayloadSizeBytes"
           value={metrics.AvgPayloadSizeBytes}
           min={10}
-          max={1000000}
+          max={10485760}
           step={10}
           onValueChange={handleValueChange}
           suffix={t('bytes')}
@@ -241,6 +247,8 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
             { label: "50KB", value: 51200 },
             { label: "250KB", value: 256000 },
             { label: "1MB", value: 1048576 },
+            { label: "5MB", value: 5242880 },
+            { label: "10MB", value: 10485760 },
           ]}
         />
 
@@ -249,7 +257,7 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
           name="AvgResponseSizeBytes"
           value={metrics.AvgResponseSizeBytes}
           min={100}
-          max={1000000}
+          max={10485760}
           step={100}
           onValueChange={handleValueChange}
           suffix={t('bytes')}
@@ -262,6 +270,8 @@ export function MetricsForm({ metrics, onChange }: MetricsFormProps) {
             { label: "50KB", value: 51200 },
             { label: "250KB", value: 256000 },
             { label: "1MB", value: 1048576 },
+            { label: "5MB", value: 5242880 },
+            { label: "10MB", value: 10485760 },
           ]}
         />
 

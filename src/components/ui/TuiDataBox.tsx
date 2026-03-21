@@ -3,7 +3,7 @@ import { InfoTooltip } from "@/components/InfoTooltip";
 
 interface TuiDataBoxProps {
   label: string;
-  value: string | number;
+  value: React.ReactNode;
   infoText?: string;
   className?: string;
   largeValue?: boolean;
