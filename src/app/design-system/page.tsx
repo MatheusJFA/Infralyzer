@@ -87,10 +87,10 @@ export default function DesignSystemPage() {
             <div>
               <h3 className="text-[11px] font-bold tracking-widest uppercase text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)] mb-6">{'>'} Buttons</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
-                <TuiButton onClick={() => { setIsLoading(true); setTimeout(() => setIsLoading(false), 2000); }}>
+                <TuiButton>
                   Standard Action
                 </TuiButton>
-                <TuiButton loading={isLoading}>
+                <TuiButton onClick={() => { setIsLoading(true); setTimeout(() => setIsLoading(false), 2000); }} loading={isLoading}>
                   Trigger Loader
                 </TuiButton>
               </div>
