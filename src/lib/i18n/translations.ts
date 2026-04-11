@@ -1,9 +1,9 @@
-import { en } from "./locales/en";
-import { pt } from "./locales/pt";
+import { en} from "./locales/en";
+import { pt} from "./locales/pt";
 
 export const translations = {
-  en,
-  pt
+ en,
+ pt
 };
 
 export type Language = 'en' | 'pt';
