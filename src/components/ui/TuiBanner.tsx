@@ -1,17 +1,17 @@
 import React from 'react';
 
 interface TuiBannerProps {
-  children: React.ReactNode;
-  className?: string;
-  variant?: 'dashed' | 'solid';
+ children: React.ReactNode;
+ className?: string;
+ variant?: 'dashed' | 'solid';
 }
 
-export function TuiBanner({ children, className = "", variant = 'dashed' }: TuiBannerProps) {
-  const borderClass = variant === 'dashed' ? 'border-dashed' : 'border-solid';
+export function TuiBanner({ children, className = "", variant = 'dashed'}: TuiBannerProps) {
+ const borderClass = variant === 'dashed' ? 'border-dashed' : 'border-solid';
 
-  return (
-    <div className={`w-full mb-4 p-3 bg-black border border-primary ${borderClass} text-sm text-primary font-bold tracking-widest uppercase mt-4 ${className}`}>
-      {children}
-    </div>
-  );
+ return (
+ <div className={`w-full mb-4 p-3 bg-card border border-paper-primary ${borderClass} text-sm text-paper-primary font-bold uppercase mt-4 ${className}`}>
+ {children}
+ </div>
+ );
 }

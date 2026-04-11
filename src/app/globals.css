@@ -1,74 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 0%; /* #000000 */
-    --foreground: 120 100% 50%; /* #00FF00 */
+    --background: 210 20% 98%; /* Very pale cool grey/blue */
+    --foreground: 215 40% 15%; /* Deep architectural ink */
 
-    --card: 0 0% 4%; /* #0e0e0e */
-    --card-foreground: 120 100% 50%; /* #00FF00 */
+    --card: 0 0% 100%; /* pristine white */
+    --card-foreground: 215 40% 15%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 120 100% 50%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 40% 15%;
 
-    --primary: 120 100% 50%; /* #00FF00 */
-    --primary-foreground: 0 0% 0%; /* #000000 */
+    --primary: 215 75% 35%; /* Blueprint blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 10%; /* #1A1A1A */
-    --secondary-foreground: 120 100% 50%; /* #00FF00 */
+    --secondary: 210 20% 95%; /* Light technical grey */
+    --secondary-foreground: 215 40% 15%;
 
-    --muted: 0 0% 4%; /* #0e0e0e */
-    --muted-foreground: 0 0% 67%; /* #ababab */
+    --muted: 210 20% 90%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 120 100% 50%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 0 70% 50%; /* Warning red */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 28%; /* #484848 */
-    --input: 0 0% 12%; /* #1f1f1f */
-    --ring: 120 100% 50%; /* #00FF00 */
+    --border: 215 20% 80%; /* precise drafting lines */
+    --input: 210 20% 95%;
+    --ring: 215 75% 35%; 
 
-    --radius: 0rem;
-    
-    --terminal-primary-glow: 100 100% 77%; /* #9fff88 */
-    --terminal-tertiary: 0 0% 20%; /* #333333 */
+    --radius: 0rem; /* perfectly sharp corners */
+
+    --paper-primary: 215 75% 35%; /* Blueprint Blue */
+    --paper-secondary: 0 0% 100%; /* Pure White */
+    --paper-accent: 0 70% 50%; /* Drafting Red Accent */
+    --paper-outline: 215 20% 80%; /* Thin geometric outline */
   }
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground antialiased;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5); /* Phosphor glow effect */
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0em;
+    background-image: 
+      linear-gradient(rgba(30, 60, 110, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 60, 110, 0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
   }
 
-  /* TUI-like scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-background border border-border;
+    @apply bg-card border-none;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary;
+    @apply bg-muted-foreground rounded-none;
   }
 }
 
-/* scanline effect */
-.scanlines::before {
-  content: " ";
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(159, 255, 136, 0.03) 50%, transparent 50%);
-  z-index: 50;
-  background-size: 100% 4px;
-  pointer-events: none;
+@layer utilities {
+  .pencil-box {
+    border-radius: 0;
+  }
+  .pencil-stroke {
+    border-radius: 0;
+  }
 }

@@ -28,66 +28,83 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
         format: 'a4',
       });
 
-      const primaryColor = '#00ff00';
-      const textColor = '#333333';
-      const secondaryColor = '#666666';
+      // THEME TOKENS - Architectural Blueprint
+      const BLUEPRINT_BLUE = [30, 64, 175]; // #1e40af
+      const TEXT_MAIN = [30, 41, 59]; // #1e293b
+      const TEXT_SUB = [100, 116, 139]; // #64748b
+      const LINE_LIGHT = [226, 232, 240]; // #e2e8f0
+      const GRID_COLOR = [241, 245, 249]; // #f1f5f9
 
+      // 1. Draw Architectural Grid Background (Subtle)
+      doc.setDrawColor(GRID_COLOR[0], GRID_COLOR[1], GRID_COLOR[2]);
+      doc.setLineWidth(0.1);
+      for (let i = 0; i < 210; i += 10) doc.line(i, 0, i, 297);
+      for (let i = 0; i < 297; i += 10) doc.line(0, i, 210, i);
+
+      // 2. Header Section
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.setTextColor(primaryColor);
+      doc.setFontSize(24);
+      doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
       doc.text("> INFRALYZER REPORT", 14, 20);
 
-      doc.setFontSize(10);
-      doc.setTextColor(secondaryColor);
-      doc.text(`Generated at: ${new Date().toLocaleString(locale === 'pt' ? 'pt-BR' : 'en-US')}`, 14, 26);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(TEXT_SUB[0], TEXT_SUB[1], TEXT_SUB[2]);
+      const dateStr = new Date().toLocaleString(locale === 'pt' ? 'pt-BR' : 'en-US');
+      doc.text(`SYSTEM_SPEC_GEN_TIMESTAMP: ${dateStr}`, 14, 26);
 
-      doc.setDrawColor(0, 255, 0);
-      doc.setLineWidth(0.5);
+      // Top Highlight Line (Blue, not Green)
+      doc.setDrawColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+      doc.setLineWidth(0.8);
       doc.line(14, 30, 196, 30);
 
       const checkPageBreak = (currentY: number, requiredHeight: number) => {
         if (currentY + requiredHeight > 275) {
           doc.addPage();
-          return 20; // reset yPos to top margin
+          // Redraw grid on new page
+          doc.setDrawColor(GRID_COLOR[0], GRID_COLOR[1], GRID_COLOR[2]);
+          doc.setLineWidth(0.1);
+          for (let i = 0; i < 210; i += 10) doc.line(i, 0, i, 297);
+          for (let i = 0; i < 297; i += 10) doc.line(0, i, 210, i);
+          return 20;
         }
         return currentY;
       };
 
       const scenarioList = scenarios && scenarios.length > 0 ? scenarios : [metrics];
 
-      // Helper function to draw a simple table
       const drawTable = (title: string, headers: string[], data: string[][], startY: number) => {
-        let y = checkPageBreak(startY, 25);
+        let y = checkPageBreak(startY, 30);
+        
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text(title, 14, y);
+        doc.setFontSize(12);
+        doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+        doc.text(`[ ${title.toUpperCase()} ]`, 14, y);
         
         y += 6;
-        const rowHeight = 8;
+        const rowHeight = 7;
         const startX = 14;
         const tableWidth = 182;
         const colWidth = tableWidth / headers.length;
         
-        // Headers
-        doc.setFillColor(240, 240, 240);
-        doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.2);
-        doc.rect(startX, y, tableWidth, rowHeight, "FD");
+        // Table Header
+        doc.setFillColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+        doc.rect(startX, y, tableWidth, rowHeight, "F");
         
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(10);
-        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
         let currX = startX + 3;
         headers.forEach((h) => {
-           doc.text(h, currX, y + 5);
-           currX += colWidth;
+          doc.text(h.toUpperCase(), currX, y + 4.5);
+          currX += colWidth;
         });
         
         y += rowHeight;
         
-        // Rows
+        // Table Content
         doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
         data.forEach((row, idx) => {
           let cx = startX + 3;
           let maxLines = 1;
@@ -97,203 +114,110 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
             return split;
           });
           
-          const actualRowHeight = Math.max(8, (maxLines * 5) + 3);
+          const actualRowHeight = Math.max(7, (maxLines * 4.5) + 2);
           y = checkPageBreak(y, actualRowHeight);
 
-          doc.setFillColor(idx % 2 === 0 ? 255 : 249, 255, 255); // Alternating row color
-          if (idx % 2 !== 0) doc.setFillColor(250, 250, 250);
-          
+          // Alternating rows
+          doc.setFillColor(idx % 2 === 0 ? 255 : 250, 251, idx % 2 === 0 ? 255 : 253);
+          doc.setDrawColor(LINE_LIGHT[0], LINE_LIGHT[1], LINE_LIGHT[2]);
           doc.rect(startX, y, tableWidth, actualRowHeight, "FD");
           
+          doc.setTextColor(TEXT_MAIN[0], TEXT_MAIN[1], TEXT_MAIN[2]);
           rowSplits.forEach((splitContent) => {
-            doc.text(splitContent, cx, y + 5);
+            doc.text(splitContent, cx, y + 4.5);
             cx += colWidth;
           });
           y += actualRowHeight;
         });
         
-        return y + 8; // Next Y position
+        return y + 10;
       };
 
       scenarioList.forEach((scenarioMetrics, index) => {
         let yPos = 40;
         if (index > 0) {
-          doc.addPage();
-          yPos = 20; // Start new page for each scenario after the first
+          yPos = checkPageBreak(yPos, 297); // Force new page
         }
 
-        // Scenario Title
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
-        doc.setTextColor(primaryColor);
-        doc.text(`Scenario ${index + 1}: ${(scenarioMetrics as any).name || 'Default'}`, 14, yPos);
-        yPos += 10;
+        doc.setFontSize(16);
+        doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+        doc.text(`DRAFT_SCENARIO_0${index + 1}: ${(scenarioMetrics as any).name || 'SYSTEM_DEFAULT'}`, 14, yPos);
+        yPos += 12;
 
-        // Section: Business Metrics
-        yPos = checkPageBreak(yPos, 60); // Estimate height for this section
+        // SECTION: INPUTS
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text("Business Metrics (Inputs)", 14, yPos);
-        
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
-        doc.setTextColor(textColor);
+        doc.setTextColor(TEXT_MAIN[0], TEXT_MAIN[1], TEXT_MAIN[2]);
+        doc.text("ENGINE_INPUT_METRICS", 14, yPos);
+        yPos += 6;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(TEXT_SUB[0], TEXT_SUB[1], TEXT_SUB[2]);
+        
         const metricsList = [
-          `Daily Active Users (DAU): ${formatNumber(scenarioMetrics.DAU)}`,
-          `Requests per User/Day: ${formatNumber(scenarioMetrics.RequestsPerUser)}`,
-          `Read / Write Ratio: ${scenarioMetrics.ReadRatioPercentage}% / ${scenarioMetrics.WriteRatioPercentage}%`,
-          `Avg Write Payload: ${formatNumber(scenarioMetrics.AvgPayloadSizeBytes)} Bytes`,
-          `Avg Read Response: ${formatNumber(scenarioMetrics.AvgResponseSizeBytes)} Bytes`,
-          `Database Retention: ${scenarioMetrics.RetentionDays} Days`,
-          `Database Replication Factor: ${scenarioMetrics.ReplicationFactor || 3}`
+          `DAU: ${formatNumber(scenarioMetrics.DAU)}`,
+          `RPS/USER: ${formatNumber(scenarioMetrics.RequestsPerUser)}`,
+          `R/W_RATIO: ${scenarioMetrics.ReadRatioPercentage}% / ${scenarioMetrics.WriteRatioPercentage}%`,
+          `PAYLOAD_SIZE: ${formatNumber(scenarioMetrics.AvgPayloadSizeBytes)} B`,
+          `RETENTION_VAL: ${scenarioMetrics.RetentionDays} DAYS`
         ];
 
         metricsList.forEach(item => {
-          doc.text(`• ${item}`, 14, yPos);
-          yPos += 6;
+          doc.text(`- ${item}`, 14, yPos);
+          yPos += 5;
         });
 
+        yPos += 5;
+        doc.setDrawColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+        doc.setLineWidth(0.2);
+        doc.line(14, yPos, 40, yPos);
         yPos += 10;
-        doc.setDrawColor(200, 200, 200);
-        doc.line(14, yPos, 196, yPos);
-        yPos += 10;
 
-        // Section: Technical Projections
-        yPos = checkPageBreak(yPos, 60); // Estimate height for this section
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text("Technical Projections", 14, yPos);
-        
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-        doc.setTextColor(textColor);
+        // SECTION: PROJECTIONS
+        const cp = calculateInfrastructure(scenarioMetrics);
+        const np = calculateInfrastructure({ ...scenarioMetrics, PeakFactor: 1.0 });
+        const pf = scenarioMetrics.PeakFactor || 1.0;
 
-        const currentProjections = calculateInfrastructure(scenarioMetrics);
-        const normalProjections = calculateInfrastructure({ ...scenarioMetrics, PeakFactor: 1.0 });
-        const currentPeakFactor = scenarioMetrics.PeakFactor || 1.0;
-
-        yPos = drawTable("Traffic Projections", ["Metric", "Normal Load (PF: 1.0)", `Peak Load (PF: ${currentPeakFactor}x)`], [
-          ["Total QPS (Queries Per Second)", formatNumber(Math.round(normalProjections.peakQPS)), formatNumber(Math.round(currentProjections.peakQPS))],
-          ["Read QPS (SELECTs)", formatNumber(Math.round(normalProjections.readQPS)), formatNumber(Math.round(currentProjections.readQPS * currentPeakFactor))],
-          ["Write QPS (MUTATIONs)", formatNumber(Math.round(normalProjections.writeQPS)), formatNumber(Math.round(currentProjections.writeQPS * currentPeakFactor))]
+        yPos = drawTable("Traffic Projection Analysis", ["Metric Item", "Standard Load", `Peak Load (${pf}x)`], [
+          ["Query Throughput (Total QPS)", formatNumber(np.peakQPS, { minimumFractionDigits: 1, maximumFractionDigits: 2 }), formatNumber(cp.peakQPS, { minimumFractionDigits: 1, maximumFractionDigits: 2 })],
+          ["Read Traffic (SELECT)", formatNumber(np.readQPS, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), formatNumber(cp.readQPS * pf, { minimumFractionDigits: 1, maximumFractionDigits: 1 })],
+          ["Write Traffic (UPSERT)", formatNumber(np.writeQPS, { minimumFractionDigits: 1, maximumFractionDigits: 1 }), formatNumber(cp.writeQPS * pf, { minimumFractionDigits: 1, maximumFractionDigits: 1 })]
         ], yPos);
 
-        yPos = drawTable("Monthly Accumulation", ["Resource Type", "Estimated Volume"], [
-          ["Database Storage (Total Required)", formatDataSize(currentProjections.totalStorageGB)],
-          ["Monthly Egress (Network Outbound)", formatDataSize(currentProjections.totalEgressGB)]
+        yPos = drawTable("Capacity Requirements", ["Asset Type", "Calculated Volume"], [
+          ["Total DB Storage Required", formatDataSize(cp.totalStorageGB)],
+          ["Estimated Network Egress", formatDataSize(cp.totalEgressGB)]
         ], yPos);
 
-        // Section: Insights
-        yPos = checkPageBreak(yPos, 100); // Estimate height for this section
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text("Infralyzer Insights", 14, yPos);
-        yPos += 8;
-
-        const addInsightToPDF = (titleKey: string, defaultTitle: string, descKey: string, defaultDesc: string) => {
-          // Wrap text to fit PDF width
-          const splitDesc = doc.splitTextToSize(t(descKey as any, { defaultValue: defaultDesc }), 180);
-          const requiredHeight = (splitDesc.length * 5) + 12;
-          yPos = checkPageBreak(yPos, requiredHeight);
+        // SECTION: COST ESTIMATION
+        if (pricingData) {
+          const { aws, azure, gcp, oracle, exchangeRate } = pricingData;
+          yPos = checkPageBreak(yPos, 50);
           
           doc.setFont("helvetica", "bold");
           doc.setFontSize(11);
-          doc.setTextColor(primaryColor);
-          doc.text(`> ${t(titleKey as any, { defaultValue: defaultTitle })}`, 14, yPos);
-          yPos += 5;
-          
-          doc.setFont("helvetica", "italic");
-          doc.setFontSize(10);
-          doc.setTextColor(secondaryColor);
-          
-          doc.text(splitDesc, 14, yPos);
-          yPos += (splitDesc.length * 5) + 3;
-        };
+          doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+          doc.text("FINANCIAL_COST_PROJECTION (USD/BRL)", 14, yPos);
+          yPos += 8;
 
-        if (currentProjections.peakQPS < 1000) {
-          addInsightToPDF("aiStdTitle", "Standard Architecture Profile", "aiStdDesc", "Current metrics suggest a straightforward architecture will comfortably support your traffic.");
-        }
-        if (scenarioMetrics.ReadRatioPercentage >= 70) {
-          addInsightToPDF("aiReadHeavyTitle", "Read-Heavy Workload", "aiReadHeavyDesc", "Your traffic favors queries over mutations. Optimize by employing Database Replication.");
-        }
-        if (scenarioMetrics.WriteRatioPercentage >= 60) {
-          addInsightToPDF("aiWriteHeavyTitle", "Write-Heavy Workload", "aiWriteHeavyDesc", "Your system constantly intakes new data. Employ horizontal Partitioning (Sharding) to split writes.");
-        }
-        if (scenarioMetrics.ReadRatioPercentage >= 75 && currentProjections.peakQPS > 5000) {
-          addInsightToPDF("aiCacheTitle", "High Read-Throughput Detected", "aiCacheDesc", "Consider adding a robust caching layer (Redis / Memcached).");
-        }
-        if (scenarioMetrics.WriteRatioPercentage >= 50 && currentProjections.totalStorageGB > 2000) {
-          addInsightToPDF("aiDbTitle", "Massive Write Stream & Storage", "aiDbDesc", "Your data acts like an append-only log. Consider using specialized databases like ScyllaDB.");
-        }
-        if (currentProjections.totalEgressGB > 2000) {
-          addInsightToPDF("aiCdnTitle", "High Bandwidth Warning", "aiCdnDesc", "Your application is serving massive amounts of outbound traffic. Offload to a CDN.");
-        }  
-
-        yPos += 10;
-        doc.setDrawColor(200, 200, 200);
-        doc.line(14, yPos, 196, yPos);
-        yPos += 10;
-
-        // Section: Cloud Pricing
-        yPos = checkPageBreak(yPos, 120); // Estimate height for this section
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text("Estimated Monthly Cloud Costs", 14, yPos);
-        
-        if (pricingData) {
-          const { aws, azure, gcp, oracle, exchangeRate } = pricingData;
-          
-          yPos += 6;
-          doc.setFont("helvetica", "italic");
-          doc.setFontSize(9);
-          doc.setTextColor(secondaryColor);
-          doc.text(`Rates conversion applied: 1 USD = ${formatNumber(exchangeRate, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BRL`, 14, yPos);
-          yPos += 10;
-
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(12);
-          
-          const renderCloudPrice = (name: string, data: any, startX: number) => {
-            doc.setTextColor(0, 0, 0);
-            doc.text(name, startX, yPos);
+          const renderPriceRow = (label: string, data: any, x: number) => {
+            doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+            doc.setTextColor(TEXT_MAIN[0], TEXT_MAIN[1], TEXT_MAIN[2]);
+            doc.text(label, x, yPos);
             
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(secondaryColor);
-            
-            const totalUSD = (currentProjections.totalStorageGB * data.storage) + (currentProjections.totalEgressGB * data.egress);
-            const totalBRL = totalUSD * exchangeRate;
-            
-            doc.text(`Storage (USD/GB): $${formatNumber(data.storage, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`, startX, yPos + 6);
-            doc.text(`Egress (USD/GB): $${formatNumber(data.egress, { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`, startX, yPos + 12);
-            
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Total: $${formatNumber(totalUSD, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, startX, yPos + 22);
-            doc.text(`R$ ${formatNumber(totalBRL, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, startX, yPos + 28);
-            doc.setFontSize(12);
+            const totalUSD = (cp.totalStorageGB * data.storage) + (cp.totalEgressGB * data.egress);
+            doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+            doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
+            doc.text(`$ ${formatNumber(totalUSD, { minimumFractionDigits: 2 })} /MO`, x, yPos + 5);
           };
 
-          // Layout: 2 items per row
-          renderCloudPrice("AWS", aws, 14);
-          renderCloudPrice("Azure", azure, 100);
-          yPos += 40;
-          
-          renderCloudPrice("Google Cloud Platform", gcp, 14);
-          renderCloudPrice("Oracle Cloud", oracle, 100);
-          
-        } else {
-           yPos += 8;
-           doc.setFont("helvetica", "normal");
-           doc.setFontSize(10);
-           doc.setTextColor(secondaryColor);
-           doc.text("Pricing data is currently loading or unavailable.", 14, yPos);
+          renderPriceRow("AWS_INFRA", aws, 14);
+          renderPriceRow("GCP_INFRA", gcp, 60);
+          renderPriceRow("AZURE_INFRA", azure, 106);
+          renderPriceRow("ORACLE_INFRA", oracle, 152);
+          yPos += 15;
         }
       });
 
@@ -301,25 +225,25 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
       const totalPages = doc.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(9);
-        doc.setTextColor(secondaryColor);
-        doc.text(`Infralyzer - Cloud Cost Estimation Dashboard | Page ${i} of ${totalPages}`, 14, 285);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(TEXT_SUB[0], TEXT_SUB[1], TEXT_SUB[2]);
+        doc.text(`[ INFRALYZER_ARCH_BLUEPRINT_V1.0 | PAGE_0${i} | CONFIDENTIAL_INTERNAL ]`, 14, 288);
       }
 
       doc.save(filename);
     } catch (error) {
       console.error("Failed to generate PDF", error);
-      alert("Erro ao gerar PDF: verifique dependências ou console.");
+      alert("Error generating technical PDF report.");
     } finally {
       setIsExporting(false);
     }
   };
 
   return (
-    <TuiButton onClick={handleExport} loading={isExporting} className="gap-3 flex items-center justify-center min-w-[200px] active:scale-[0.98]">
+    <TuiButton onClick={handleExport} loading={isExporting} className="gap-3 flex items-center justify-center min-w-[200px] border border-paper-primary/20">
       <Download size={18} />
-      <span>[ {isExporting ? t('exportPdfLoading') : t('exportPdf')} ]</span>
+      <span>{isExporting ? t('exportPdfLoading').toUpperCase() : t('exportPdf').toUpperCase()}</span>
     </TuiButton>
   );
 }
