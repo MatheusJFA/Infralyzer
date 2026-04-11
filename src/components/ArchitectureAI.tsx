@@ -1,5 +1,4 @@
 import React from 'react';
-import { TuiBanner } from "@/components/ui/TuiBanner";
 import { useTranslation } from "@/lib/i18n/I18nContext";
 import type { BusinessMetrics, InfrastructureProjections } from '@/types';
 import { Info, Zap, Server, Database } from 'lucide-react';
@@ -31,7 +30,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
     // Baseline Insight
     if (projections.peakQPS < 1000) {
       insights.push({
-        icon: <Zap size={18} className="text-primary/70" />,
+        icon: <Zap size={18} className="text-paper-primary/50" />,
         title: t('aiStdTitle' as any),
         desc: t('aiStdDesc' as any),
       });
@@ -42,26 +41,26 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
 
     if (isReadHeavy) {
       insights.push({
-        icon: <Database size={18} className="text-cyan-400" />,
+        icon: <Database size={18} className="text-paper-primary/60" />,
         title: t('aiReadHeavyTitle' as any),
         desc: t('aiReadHeavyDesc' as any),
         terms: [
           { word: "Database Replication", hint: t('tooltipReplication' as any) },
           { word: "Read Replicas", hint: t('tooltipReadReplicas' as any) },
-          { word: "Redis", hint: t('aiCacheTitle' as any) } // A quick fallback hint
+          { word: "Redis", hint: t('aiCacheTitle' as any) }
         ]
       })
     }
 
     if (isWriteHeavy) {
       insights.push({
-        icon: <Database size={18} className="text-orange-400" />,
+        icon: <Database size={18} className="text-paper-primary/80" />,
         title: t('aiWriteHeavyTitle' as any),
         desc: t('aiWriteHeavyDesc' as any),
         terms: [
           { word: "Sharding", hint: t('tooltipSharding' as any) },
           { word: "Partitioning", hint: t('tooltipPartitioning' as any) },
-          { word: "NoSQL", hint: "Database approach designed for unstructured or highly-scalable inserts like DynamoDB or MongoDB." }
+          { word: "NoSQL", hint: "Database approach designed for unstructured or highly-scalable inserts." }
         ]
       })
     }
@@ -69,7 +68,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
     // Caching
     if (metrics.ReadRatioPercentage >= 75 && projections.peakQPS > 5000) {
       insights.push({
-        icon: <Zap size={18} className="text-yellow-500" />,
+        icon: <Zap size={18} className="text-paper-primary" />,
         title: t('aiCacheTitle' as any),
         desc: t('aiCacheDesc' as any),
       });
@@ -78,16 +77,16 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
     // High Write Storage
     if (metrics.WriteRatioPercentage >= 50 && projections.totalStorageGB > 2000) {
       insights.push({
-        icon: <Server size={18} className="text-primary" />,
+        icon: <Server size={18} className="text-paper-primary/90" />,
         title: t('aiDbTitle' as any),
-        desc: t('aiDbDesc' as any),
+        desc: t('aiDbDbDesc' as any),
       });
     }
 
     // CDN and Edge Warning
     if (projections.totalEgressGB > 2000) {
       insights.push({
-        icon: <Info size={18} className="text-blue-500" />,
+        icon: <Info size={18} className="text-paper-primary/40" />,
         title: t('aiCdnTitle' as any),
         desc: t('aiCdnDesc' as any),
         terms: [
@@ -97,15 +96,15 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
       });
     }
 
-    // Serverless (To save Peak Factor costs)
+    // Serverless
     if ((metrics.PeakFactor || 1.0) > 3.0) {
       insights.push({
-        icon: <Zap size={18} className="text-pink-500" />,
+        icon: <Zap size={18} className="text-paper-primary/70" />,
         title: t('aiServerlessTitle' as any),
         desc: t('aiServerlessDesc' as any),
         terms: [
           { word: "Serverless Compute", hint: t('tooltipServerlessCompute' as any) },
-          { word: "Compute", hint: "Standard term for Processing VMs and CPUs like EC2 or droplets." }
+          { word: "Compute", hint: "Processing VMs and CPUs like EC2 or droplets." }
         ]
       });
     }
@@ -126,7 +125,6 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
       const newParts: React.ReactNode[] = [];
       parts.forEach(part => {
         if (typeof part === 'string') {
-          // split keeping the matched word using generic case-insensitive regex
           const regex = new RegExp(`(${term.word})`, 'gi');
           const splitted = part.split(regex);
           
@@ -134,7 +132,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
             if (s.toLowerCase() === term.word.toLowerCase()) {
               newParts.push(
                 <InfoTooltip key={`${s}-${Math.random()}`} content={term.hint}>
-                  <span className="inline-flex items-center text-primary font-bold border-b border-primary/50 group-hover:border-primary transition-colors">
+                  <span className="inline-flex items-center text-paper-primary font-bold border-b border-paper-primary/30 hover:border-paper-primary transition-colors cursor-help">
                     {s}
                   </span>
                 </InfoTooltip>
@@ -144,7 +142,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
             }
           });
         } else {
-          newParts.push(part); // Already a React node
+          newParts.push(part);
         }
       });
       parts = newParts;
@@ -155,19 +153,19 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
 
   return (
     <div className="w-full mt-10">
-      <h3 className="text-sm font-bold tracking-widest uppercase text-terminal-primary drop-shadow-[0_0_5px_rgba(0,255,0,0.8)] flex items-center gap-2 mb-6">
-        <Zap size={16} className="fill-terminal-primary text-terminal-primary" /> {'>'} {t('aiInsights')}
+      <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-paper-primary flex items-center gap-2 mb-6">
+        <Zap size={14} className="fill-paper-primary/20 text-paper-primary" /> {'>'} {t('aiInsights')}
       </h3>
       <div className="flex flex-col gap-4">
         {insights.map((insight, idx) => (
-          <div key={idx} className="flex flex-col gap-2 p-4 border border-terminal-primary border-dashed bg-terminal-black/30 group hover:border-solid hover:bg-terminal-primary/5 transition-all">
-            <div className="flex items-center gap-2">
-              <span className="p-1">{insight.icon}</span>
-              <h4 className="font-bold text-[11px] tracking-widest text-terminal-primary uppercase drop-shadow-[0_0_3px_rgba(0,255,0,0.5)]">
+          <div key={idx} className="flex flex-col gap-2 p-4 border border-paper-primary/30 border-dashed bg-card/10 group hover:border-solid hover:bg-paper-primary/5 transition-all">
+            <div className="flex items-center gap-3">
+              <span className="p-1 scale-110">{insight.icon}</span>
+              <h4 className="font-bold text-[10px] tracking-[0.1em] text-paper-primary uppercase ">
                 {insight.title}
               </h4>
             </div>
-            <p className="text-[11px] tracking-wider text-terminal-primary/80 leading-relaxed normal-case mt-1 ml-9">
+            <p className="text-[11px] tracking-wide text-paper-primary/70 leading-relaxed mt-1 ml-10">
               {renderHighlightedDesc(insight.desc, insight.terms)}
             </p>
           </div>
