@@ -6,23 +6,23 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useTranslation();
 
   return (
-    <div className="flex bg-secondary/50 rounded-lg p-1 border border-border">
+    <div className="flex bg-paper-secondary/30 p-0.5 border border-paper-outline/30 backdrop-blur-sm">
       <button
         onClick={() => setLocale('en')}
-        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+        className={`px-3 py-1.5 text-[10px] font-bold transition-all uppercase tracking-widest ${
           locale === 'en'
-            ? 'bg-background text-foreground shadow-sm'
-            : 'text-muted-foreground hover:text-foreground'
+            ? 'bg-paper-primary text-card shadow-lg'
+            : 'text-paper-primary/50 hover:text-paper-primary hover:bg-paper-primary/5'
         }`}
       >
         EN
       </button>
       <button
         onClick={() => setLocale('pt')}
-        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+        className={`px-3 py-1.5 text-[10px] font-bold transition-all uppercase tracking-widest ${
           locale === 'pt'
-            ? 'bg-background text-foreground shadow-sm'
-            : 'text-muted-foreground hover:text-foreground'
+            ? 'bg-paper-primary text-card shadow-lg'
+            : 'text-paper-primary/50 hover:text-paper-primary hover:bg-paper-primary/5'
         }`}
       >
         PT
