@@ -10,6 +10,12 @@ vi.mock('@/lib/i18n/I18nContext', () => ({
  if (key === 'ReadWriteRatio') return `Read: ${params.read}, Write: ${params.write}`;
  return key;
  },
+    formatNumber: (num: number, options?: any) => {
+      const minDecimals = options?.minimumFractionDigits !== undefined ? options.minimumFractionDigits : 0;
+      return num.toFixed(Math.max(minDecimals, 0));
+    },
+ formatDataSize: (gb: number) => `${gb} GB`,
+ getStorageDetails: (gb: number) => `${gb} GB detail`,
  }),
 }));
 

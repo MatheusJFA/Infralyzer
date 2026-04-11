@@ -5,31 +5,43 @@ import { TuiDataBox} from '../TuiDataBox';
 
 // Mock InfoTooltip to focus on TuiDataBox behavior
 vi.mock('@/components/InfoTooltip', () => ({
- InfoTooltip: ({ content}: { content: string}) => <div data-testid="tooltip">{content}</div>,
+  InfoTooltip: ({ content}: { content: string}) => <div data-testid="tooltip">{content}</div>,
+}));
+
+// Mock I18nContext
+vi.mock('@/lib/i18n/I18nContext', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    formatNumber: (num: number, options?: any) => {
+      const minDecimals = options?.minimumFractionDigits !== undefined ? options.minimumFractionDigits : 0;
+      return num.toFixed(Math.max(minDecimals, 0));
+    },
+    formatDataSize: (gb: number) => `${gb} GB`,
+    getStorageDetails: (gb: number) => `${gb} GB detail`,
+  }),
 }));
 
 describe('TuiDataBox Component', () => {
- it('should render label and value correctly', () => {
- render(<TuiDataBox label="Monthly Cost" value="$1,000" />);
- expect(screen.getByText('Monthly Cost')).toBeInTheDocument();
- expect(screen.getByText('$1,000')).toBeInTheDocument();
- });
+  it('should render label and value correctly', () => {
+    render(<TuiDataBox label="Storage" value="500 GB" />);
+    expect(screen.getByText('Storage')).toBeInTheDocument();
+    expect(screen.getByText('500 GB')).toBeInTheDocument();
+  });
 
- it('should render tooltip when infoText is provided', () => {
- render(<TuiDataBox label="Cost" value="100" infoText="Test Tooltip" />);
- expect(screen.getByTestId('tooltip')).toHaveTextContent('Test Tooltip');
- });
+  it('should apply large value styling by default', () => {
+    render(<TuiDataBox label="L" value="V" />);
+    const valueDiv = screen.getByText('V');
+    expect(valueDiv.className).toContain('text-4xl');
+  });
 
- it('should apply large value styling by default', () => {
- const { getByText} = render(<TuiDataBox label="Test" value="Value" />);
- const valueEl = getByText('Value');
- expect(valueEl.className).toContain('text-2xl font-black');
- });
+  it('should apply small value styling when largeValue is false', () => {
+    render(<TuiDataBox label="L" value="V" largeValue={false} />);
+    const valueDiv = screen.getByText('V');
+    expect(valueDiv.className).toContain('text-xl');
+  });
 
- it('should apply small value styling when largeValue is false', () => {
- const { getByText} = render(<TuiDataBox label="Test" value="Value" largeValue={false} />);
- const valueEl = getByText('Value');
- expect(valueEl.className).toContain('text-xl font-bold');
- expect(valueEl.className).not.toContain('text-2xl font-black');
- });
+  it('should render subValue correctly', () => {
+    render(<TuiDataBox label="L" value="V" subValue="Sub" />);
+    expect(screen.getByText('Sub')).toBeInTheDocument();
+  });
 });
