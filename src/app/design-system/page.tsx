@@ -4,11 +4,15 @@ import React, { useState} from 'react';
 import { TuiSection} from "@/components/ui/TuiSection";
 import { TuiButton} from "@/components/ui/TuiButton";
 import { TuiDataBox} from "@/components/ui/TuiDataBox";
+import Link from "next/link";
 import { TuiFormGroup} from "@/components/ui/TuiFormGroup";
 import { TuiBanner} from "@/components/ui/TuiBanner";
 import { TuiLoading} from "@/components/ui/TuiLoading";
 import { InfoTooltip} from "@/components/InfoTooltip";
 import { MetricSlider} from "@/components/forms/MetricsForm";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function DesignSystemPage() {
  const [isLoading, setIsLoading] = useState(false);
@@ -18,17 +22,22 @@ export default function DesignSystemPage() {
  <main className="min-h-screen uppercase flex flex-col relative overflow-x-hidden w-full max-w-5xl mx-auto border-x border-paper-outline/20 pb-24 px-4 md:px-0">
  
  <header className="flex justify-between items-center p-6 border-b border-paper-outline/30 bg-background/50 backdrop-blur-sm z-10 sticky top-0">
- <h1 className="text-2xl tracking-widest font-bold ">
- {'>'} NEON_TERMINAL_DS <span className="">_</span>
- </h1>
- <div className="text-xs text-muted-foreground tracking-widest font-mono">v1.0.0</div>
+ <div className="flex flex-col gap-1">
+   <Link href="/dashboard" className="text-[10px] text-paper-primary/60 hover:text-paper-primary flex items-center gap-1 transition-colors group mb-1">
+     <ArrowLeft size={10} className="group-hover:-translate-x-0.5 transition-transform" /> [ BACK_TO_SYSTEM ]
+   </Link>
+   <h1 className="text-xl tracking-widest font-bold ">
+   {'>'} BLUEPRINT_DS <span className="">_</span>
+   </h1>
+ </div>
+ <div className="text-xs text-muted-foreground tracking-widest font-mono">v1.1.0</div>
  </header>
 
  <div className="p-6 space-y-12">
  {/* Intro */}
  <section>
  <p className="text-sm leading-relaxed max-w-3xl opacity-80 normal-case font-mono">
- This design system rejects the "friendly" and "rounded" tropes of modern SaaS in favor of an elite, high-density hacker aesthetic. It is inspired by brutalist terminal interfaces and high-end editorial layouts. We are building a "Sovereign Console"—an interface that prioritizes raw data density, technical precision, and a sense of "under-the-hood" authority.
+ This design system rejects the "friendly" and "rounded" tropes of modern SaaS in favor of a technical, high-precision architectural blueprint aesthetic. It is inspired by engineering drafts, blueprints, and high-end editorial technical layouts. We are building a "Precision Console"—an interface that prioritizes raw data density, technical authority, and structural clarity.
  </p>
  </section>
 
