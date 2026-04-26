@@ -12,7 +12,7 @@ export function TuiSection({ title, children, className = "", sectionRef, varian
   return (
     <section
       ref={sectionRef}
-      className={`w-full bg-background border border-paper-outline/30 p-6 flex flex-col relative transition-all duration-300 hover:border-paper-primary/20
+      className={`w-full bg-background border border-paper-outline/30 p-4 sm:p-6 flex flex-col relative transition-all duration-300 hover:border-paper-primary/20
       ${className}`}
     >
       {title && (

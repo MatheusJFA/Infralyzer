@@ -15,7 +15,7 @@ export function TuiDataBox({ label, value, infoText, className = "", largeValue 
  <div className={`w-full p-4 bg-card border-t border-paper-outline/20 relative group hover:border-paper-primary/50 transition-colors duration-300 ${className}`}>
  
  
- <div className="text-[10px] text-muted-foreground tracking-widest flex items-center mb-2">
+ <div className="text-[10px] text-muted-foreground tracking-wider flex items-center mb-2">
  <span className="opacity-80 font-bold uppercase">{label}</span>
  {infoText && <InfoTooltip content={infoText} />}
  </div>

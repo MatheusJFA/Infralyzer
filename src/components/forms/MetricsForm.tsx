@@ -94,13 +94,13 @@ export function MetricSlider({
   return (
     <TuiFormGroup className="mb-6 pb-6 border-b border-paper-outline/30 border-dashed last:border-0 last:pb-0">
       <div className="flex flex-col justify-between items-start gap-3 mb-4">
-        <label className="text-[11px] text-muted-foreground tracking-widest flex items-center uppercase" htmlFor={name}>
+        <label className="text-[11px] text-muted-foreground tracking-wider flex items-center uppercase" htmlFor={name}>
           <span className="break-words mr-2">{label}</span>
           {infoText && <InfoTooltip content={infoText} />}
         </label>
-        <div className="flex items-center gap-2 shrink-0 self-start max-w-full">
+        <div className="flex flex-wrap items-center gap-1.5 self-start max-w-full">
           {editable ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
                 disabled={value <= min}
@@ -126,7 +126,7 @@ export function MetricSlider({
                     onValueChange(name, Math.max(min, Math.min(max, val)));
                   }
                 }}
-                className="w-36 text-center text-xl font-bold bg-background text-paper-primary px-2 py-1 shadow-none border border-paper-outline hover:border-paper-primary focus:border-paper-primary focus:outline-none focus:ring-1 focus:ring-paper-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
+                className="w-28 text-center text-xl font-bold bg-background text-paper-primary px-1 py-1 shadow-none border border-paper-outline hover:border-paper-primary focus:border-paper-primary focus:outline-none focus:ring-1 focus:ring-paper-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
               />
               <button
                 type="button"
@@ -149,7 +149,7 @@ export function MetricSlider({
               {formatNumber(value)}
             </div>
           )}
-          {suffix && <span className="text-[10px] text-muted-foreground font-bold uppercase whitespace-nowrap tracking-widest">{suffix}</span>}
+          {suffix && <span className="text-[10px] text-muted-foreground font-bold uppercase whitespace-nowrap tracking-wider">{suffix}</span>}
         </div>
       </div>
 
