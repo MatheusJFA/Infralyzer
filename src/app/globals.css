@@ -129,4 +129,23 @@
   .pencil-stroke {
     border-radius: 0;
   }
+
+  .blueprint-card {
+    @apply bg-card/50 backdrop-blur-md transition-all duration-700 border border-paper-primary/10;
+    box-shadow: 
+      0 0 0 1px hsl(var(--paper-primary) / 0.02),
+      0 15px 35px -10px hsl(var(--paper-primary) / 0.08);
+  }
+
+  .blueprint-card:hover {
+    @apply bg-card/60 border-paper-primary/20;
+    box-shadow: 
+      0 0 0 1px hsl(var(--paper-primary) / 0.05),
+      0 20px 45px -10px hsl(var(--paper-primary) / 0.12);
+  }
+
+  .blueprint-glow {
+    box-shadow: 0 0 25px -5px hsl(var(--paper-primary) / 0.2);
+  }
 }
+

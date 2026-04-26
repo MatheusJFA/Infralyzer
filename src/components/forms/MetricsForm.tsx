@@ -125,7 +125,7 @@ export function MetricSlider({
                     onValueChange(name, Math.max(min, Math.min(max, val)));
                   }
                 }}
-                className="w-28 text-center text-xl font-bold bg-background text-paper-primary px-1 py-1 shadow-none border border-paper-outline hover:border-paper-primary focus:border-paper-primary focus:outline-none focus:ring-1 focus:ring-paper-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield]"
+                className="w-28 text-center text-xl font-bold bg-card/40 backdrop-blur-sm text-paper-primary px-1 py-1 shadow-none border border-paper-outline/30 hover:border-paper-primary/50 focus:border-paper-primary focus:outline-none focus:ring-1 focus:ring-paper-primary [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield] transition-all"
               />
               <button
                 type="button"
@@ -143,7 +143,7 @@ export function MetricSlider({
               </button>
             </div>
           ) : (
-            <div className="text-xl font-bold bg-background text-paper-primary border border-paper-outline px-3 py-1 rounded-none shadow-none ">
+            <div className="text-xl font-bold bg-card/40 backdrop-blur-sm text-paper-primary border border-paper-outline/30 px-3 py-1 rounded-none shadow-none ">
               {formatNumber(value)}
             </div>
           )}
