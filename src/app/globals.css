@@ -40,6 +40,44 @@
     --paper-secondary: 0 0% 100%; /* Pure White */
     --paper-accent: 0 70% 50%; /* Drafting Red Accent */
     --paper-outline: 215 20% 80%; /* Thin geometric outline */
+    --grid-color: rgba(30, 60, 110, 0.04);
+  }
+
+  .dark {
+    --background: 222 47% 7%; /* Deeper technical black/navy */
+    --foreground: 210 20% 90%;
+    
+    --card: 222 47% 10%;
+    --card-foreground: 210 20% 90%;
+    
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 20% 90%;
+    
+    --primary: 199 89% 48%; /* Brighter, glowing blueprint cyan */
+    --primary-foreground: 222 47% 7%;
+    
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 210 20% 90%;
+    
+    --muted: 222 47% 15%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 0 80% 60%;
+    --accent-foreground: 210 20% 90%;
+    
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 20% 90%;
+    
+    --border: 222 30% 20%;
+    --input: 222 47% 12%;
+    --ring: 199 89% 48%;
+    
+    --paper-primary: 199 89% 48%;
+    --paper-secondary: 222 47% 10%;
+    --paper-accent: 0 80% 60%;
+    --paper-outline: 222 30% 25%;
+    
+    --grid-color: rgba(100, 150, 255, 0.05);
   }
 }
 
@@ -49,8 +87,8 @@
     font-family: 'Inter', sans-serif;
     letter-spacing: 0em;
     background-image: 
-      linear-gradient(rgba(30, 60, 110, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(30, 60, 110, 0.04) 1px, transparent 1px);
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 20px 20px;
     background-position: center center;
   }

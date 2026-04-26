@@ -41,7 +41,9 @@ export function StorageEvolutionChart({ metrics, projections }: StorageEvolution
 
   if (data.length <= 1) return null;
 
-  const blueprintBlue = '#1e40af';
+  const blueprintBlue = 'hsl(var(--paper-primary))';
+  const tooltipBg = 'hsl(var(--card))';
+  const tooltipBorder = 'hsl(var(--paper-outline))';
 
   return (
     <div className="w-full bg-card border border-paper-outline/20 p-6 relative group hover:border-paper-primary/40 transition-colors duration-500 mt-6">
@@ -79,8 +81,8 @@ export function StorageEvolutionChart({ metrics, projections }: StorageEvolution
             <Tooltip 
               cursor={{ stroke: blueprintBlue, strokeWidth: 1, strokeDasharray: '3 3' }}
               contentStyle={{ 
-                backgroundColor: '#ffffff', 
-                border: `1px solid ${blueprintBlue}`, 
+                backgroundColor: tooltipBg, 
+                border: `1px solid ${tooltipBorder}`, 
                 color: blueprintBlue, 
                 fontFamily: "'JetBrains Mono', monospace", 
                 textTransform: 'uppercase', 

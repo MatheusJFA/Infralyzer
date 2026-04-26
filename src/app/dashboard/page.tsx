@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useMemo, useRef} from "react";
 import { useTranslation} from "@/lib/i18n/I18nContext";
 import { LanguageSwitcher} from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { MetricsForm} from "@/components/forms/MetricsForm";
 import { CostEstimation} from "@/components/charts/CostEstimation";
 import { calculateInfrastructure} from "@/lib/core/engine";
@@ -25,7 +26,7 @@ export default function DashboardPage() {
  const { t, formatNumber, formatDataSize, getStorageDetails} = useTranslation();
 
  const [metrics, setMetrics] = useState<BusinessMetrics>({
- DAU: 1250000,
+ DAU: 100,
  RequestsPerUser: 42,
  PeakFactor: 2.0,
  ReadRatioPercentage: 80,
@@ -58,8 +59,13 @@ export default function DashboardPage() {
  <h1 className="text-xl tracking-widest font-bold ">
  INFRALYZER_DB <span className="">_</span>
  </h1>
- <div className="text-paper-primary scale-90 origin-right">
- <LanguageSwitcher />
+ <div className="flex items-center gap-3">
+  <div className="text-paper-primary scale-90 origin-right">
+  <ThemeToggle />
+  </div>
+  <div className="text-paper-primary scale-90 origin-right">
+  <LanguageSwitcher />
+  </div>
  </div>
  </header>
 

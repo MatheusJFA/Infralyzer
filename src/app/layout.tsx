@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 import { I18nProvider} from "@/lib/i18n/I18nContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function RootLayout({
  children,
@@ -18,7 +19,8 @@ export default function RootLayout({
 }>) {
  return (
  <html lang="en">
- <body className={`${spaceGrotesk.className} bg-card min-h-screen w-full text-paper-primary scanlines selection:bg-paper-primary selection:text-card font-sans relative`}>
+ <body className={`${spaceGrotesk.className} bg-background min-h-screen w-full text-paper-primary selection:bg-paper-primary selection:text-card font-sans relative`}>
+ <ThemeProvider>
  <I18nProvider>
  <div className="min-h-screen flex flex-col">
  <main className="flex-grow">
@@ -26,6 +28,7 @@ export default function RootLayout({
  </main>
  </div>
  </I18nProvider>
+ </ThemeProvider>
  </body>
  </html>
  );

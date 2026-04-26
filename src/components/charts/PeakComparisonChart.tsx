@@ -46,8 +46,10 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
     return null;
   }
 
-  const blueprintBlue = '#1e40af'; // Blueprint Blue
-  const lightBlueprintBlue = '#2768c2ff';
+  const blueprintBlue = 'hsl(var(--paper-primary))';
+  const lightBlueprintBlue = 'hsl(var(--paper-primary) / 0.5)';
+  const tooltipBg = 'hsl(var(--card))';
+  const tooltipBorder = 'hsl(var(--paper-outline))';
 
   return (
     <div className="w-full bg-card border border-paper-outline/20 p-6 relative group hover:border-paper-primary/40 transition-colors duration-500 mt-6">
@@ -81,10 +83,10 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
               tickFormatter={(val) => val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val}
             />
             <Tooltip 
-              cursor={{ fill: 'rgba(30, 64, 175, 0.05)' }}
+              cursor={{ fill: 'hsl(var(--paper-primary) / 0.05)' }}
               contentStyle={{ 
-                backgroundColor: '#ffffff', 
-                border: `1px solid ${blueprintBlue}`,
+                backgroundColor: tooltipBg, 
+                border: `1px solid ${tooltipBorder}`,
                 color: blueprintBlue,
                 fontSize: '12px',
                 fontFamily: "'JetBrains Mono', monospace",
