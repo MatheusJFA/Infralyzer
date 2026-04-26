@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
  const [metrics, setMetrics] = useState<BusinessMetrics>({
  DAU: 100,
- RequestsPerUser: 42,
+ RequestsPerUser: 10,
  PeakFactor: 2.0,
  ReadRatioPercentage: 80,
  WriteRatioPercentage: 20,
