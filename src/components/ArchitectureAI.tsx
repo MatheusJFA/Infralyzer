@@ -118,7 +118,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
 
   const renderHighlightedDesc = (desc: string, terms?: TermInfo[]) => {
     if (!terms || terms.length === 0) return <>{desc}</>;
-    
+
     let parts: React.ReactNode[] = [desc];
 
     terms.forEach(term => {
@@ -127,7 +127,7 @@ export function ArchitectureAI({ metrics, projections }: ArchitectureAIProps) {
         if (typeof part === 'string') {
           const regex = new RegExp(`(${term.word})`, 'gi');
           const splitted = part.split(regex);
-          
+
           splitted.forEach(s => {
             if (s.toLowerCase() === term.word.toLowerCase()) {
               newParts.push(

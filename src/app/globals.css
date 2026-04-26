@@ -6,77 +6,91 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* Very pale cool grey/blue */
-    --foreground: 215 40% 15%; /* Deep architectural ink */
+    --background: 210 20% 98%;
+    /* Very pale cool grey/blue */
+    --foreground: 215 40% 15%;
+    /* Deep architectural ink */
 
-    --card: 0 0% 100%; /* pristine white */
+    --card: 0 0% 100%;
+    /* pristine white */
     --card-foreground: 215 40% 15%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 215 40% 15%;
 
-    --primary: 215 75% 35%; /* Blueprint blue */
+    --primary: 215 75% 35%;
+    /* Blueprint blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 95%; /* Light technical grey */
+    --secondary: 210 20% 95%;
+    /* Light technical grey */
     --secondary-foreground: 215 40% 15%;
 
     --muted: 210 20% 90%;
     --muted-foreground: 215 15% 45%;
 
-    --accent: 0 70% 50%; /* Warning red */
+    --accent: 0 70% 50%;
+    /* Warning red */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 20% 80%; /* precise drafting lines */
+    --border: 215 20% 80%;
+    /* precise drafting lines */
     --input: 210 20% 95%;
-    --ring: 215 75% 35%; 
+    --ring: 215 75% 35%;
 
-    --radius: 0rem; /* perfectly sharp corners */
+    --radius: 0rem;
+    /* perfectly sharp corners */
 
-    --paper-primary: 215 75% 35%; /* Blueprint Blue */
-    --paper-secondary: 0 0% 100%; /* Pure White */
-    --paper-accent: 0 70% 50%; /* Drafting Red Accent */
-    --paper-outline: 215 20% 80%; /* Thin geometric outline */
+    --paper-primary: 215 75% 35%;
+    /* Blueprint Blue */
+    --paper-secondary: 0 0% 100%;
+    /* Pure White */
+    --paper-accent: 0 70% 50%;
+    /* Drafting Red Accent */
+    --paper-outline: 215 20% 80%;
+    /* Thin geometric outline */
     --grid-color: rgba(30, 60, 110, 0.04);
   }
 
   .dark {
-    --background: 222 47% 7%; /* Deeper technical black/navy */
+    --background: 222 47% 7%;
+    /* Deeper technical black/navy */
     --foreground: 210 20% 90%;
-    
+
     --card: 222 47% 10%;
     --card-foreground: 210 20% 90%;
-    
+
     --popover: 222 47% 10%;
     --popover-foreground: 210 20% 90%;
-    
-    --primary: 199 89% 48%; /* Brighter, glowing blueprint cyan */
+
+    --primary: 199 89% 48%;
+    /* Brighter, glowing blueprint cyan */
     --primary-foreground: 222 47% 7%;
-    
+
     --secondary: 222 47% 15%;
     --secondary-foreground: 210 20% 90%;
-    
+
     --muted: 222 47% 15%;
     --muted-foreground: 215 20% 65%;
-    
+
     --accent: 0 80% 60%;
     --accent-foreground: 210 20% 90%;
-    
+
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 20% 90%;
-    
+
     --border: 222 30% 20%;
     --input: 222 47% 12%;
     --ring: 199 89% 48%;
-    
+
     --paper-primary: 199 89% 48%;
     --paper-secondary: 222 47% 10%;
     --paper-accent: 0 80% 60%;
     --paper-outline: 222 30% 25%;
-    
+
     --grid-color: rgba(100, 150, 255, 0.05);
   }
 }
@@ -86,7 +100,7 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0em;
-    background-image: 
+    background-image:
       linear-gradient(var(--grid-color) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 20px 20px;
@@ -97,9 +111,11 @@
     width: 6px;
     height: 6px;
   }
+
   ::-webkit-scrollbar-track {
     @apply bg-card border-none;
   }
+
   ::-webkit-scrollbar-thumb {
     @apply bg-muted-foreground rounded-none;
   }
@@ -109,6 +125,7 @@
   .pencil-box {
     border-radius: 0;
   }
+
   .pencil-stroke {
     border-radius: 0;
   }

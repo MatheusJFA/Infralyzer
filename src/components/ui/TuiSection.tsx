@@ -17,7 +17,7 @@ export function TuiSection({ title, children, className = "", sectionRef, varian
     >
       {title && (
         <h2 className="text-sm font-bold tracking-[0.2em] mb-6 flex items-center gap-2 uppercase">
-          <span className="text-paper-primary opacity-50">{'>'}</span> 
+          <span className="text-paper-primary opacity-50">{'>'}</span>
           <span className="text-paper-primary/80">[ {title} ]</span>
         </h2>
       )}

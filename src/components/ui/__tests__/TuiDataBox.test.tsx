@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, screen} from '@testing-library/react';
-import { describe, it, expect, vi} from 'vitest';
-import { TuiDataBox} from '../TuiDataBox';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { TuiDataBox } from '../TuiDataBox';
 
 // Mock InfoTooltip to focus on TuiDataBox behavior
 vi.mock('@/components/InfoTooltip', () => ({
-  InfoTooltip: ({ content}: { content: string}) => <div data-testid="tooltip">{content}</div>,
+  InfoTooltip: ({ content }: { content: string }) => <div data-testid="tooltip">{content}</div>,
 }));
 
 // Mock I18nContext

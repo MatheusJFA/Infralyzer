@@ -60,7 +60,7 @@ export function MetricSlider({
   const fromLog = (logVal: number) => {
     const safeMin = min === 0 ? 0.1 : min;
     let val = safeMin * Math.pow(max / safeMin, logVal / 100);
-    
+
     // If the original min was 0 and we are very close to our safeMin, snap to 0
     if (min === 0 && logVal < 5) {
       const snapToZeroThreshold = safeMin * 1.5;
@@ -108,11 +108,10 @@ export function MetricSlider({
                   const nextVal = scale === 'log' ? fromLog(toLog(value) - 5) : value - step;
                   onValueChange(name, Math.max(min, nextVal));
                 }}
-                className={`h-10 w-10 flex items-center justify-center border transition-all active:scale-95 ${
-                  value <= min 
-                    ? 'bg-paper-secondary/50 border-paper-outline/30 text-paper-outline cursor-not-allowed opacity-50' 
+                className={`h-10 w-10 flex items-center justify-center border transition-all active:scale-95 ${value <= min
+                    ? 'bg-paper-secondary/50 border-paper-outline/30 text-paper-outline cursor-not-allowed opacity-50'
                     : 'bg-paper-secondary border-paper-outline hover:bg-paper-primary hover:text-card text-paper-primary cursor-pointer'
-                }`}
+                  }`}
               >
                 <Minus className="h-4 w-4" />
               </button>
@@ -135,11 +134,10 @@ export function MetricSlider({
                   const nextVal = scale === 'log' ? fromLog(toLog(value) + 5) : value + step;
                   onValueChange(name, Math.min(max, nextVal));
                 }}
-                className={`h-10 w-10 flex items-center justify-center border transition-all active:scale-95 ${
-                  value >= max 
-                    ? 'bg-paper-secondary/50 border-paper-outline/30 text-paper-outline cursor-not-allowed opacity-50' 
+                className={`h-10 w-10 flex items-center justify-center border transition-all active:scale-95 ${value >= max
+                    ? 'bg-paper-secondary/50 border-paper-outline/30 text-paper-outline cursor-not-allowed opacity-50'
                     : 'bg-paper-secondary border-paper-outline hover:bg-paper-primary hover:text-card text-paper-primary cursor-pointer'
-                }`}
+                  }`}
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -155,8 +153,8 @@ export function MetricSlider({
 
       <div className="relative h-8 flex items-center mt-2">
         <div className="absolute left-0 right-0 h-1 bg-paper-outline top-1/2 -translate-y-1/2">
-          <div 
-            className="h-full bg-paper-primary transition-all duration-75" 
+          <div
+            className="h-full bg-paper-primary transition-all duration-75"
             style={{ width: `${Math.max(0, Math.min(100, progressPercent))}%` }}
           ></div>
         </div>
@@ -184,11 +182,10 @@ export function MetricSlider({
               key={preset.label}
               type="button"
               onClick={() => onValueChange(name, preset.value)}
-              className={`text-[10px] py-2 border transition-colors flex items-center justify-center ${
-                value === preset.value
+              className={`text-[10px] py-2 border transition-colors flex items-center justify-center ${value === preset.value
                   ? 'bg-paper-primary text-card border-paper-primary '
                   : 'bg-transparent text-muted-foreground border-paper-outline hover:border-paper-primary/50'
-              }`}
+                }`}
             >
               {preset.label}
             </button>

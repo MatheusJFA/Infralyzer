@@ -8,4 +8,4 @@ export const DEFAULT_PEAK_FACTOR = 2.0;
 export const DEFAULT_REPLICATION_FACTOR = 3;
 
 // Set up Decimal configuration
-Decimal.set({ precision: 10, rounding: Decimal.ROUND_HALF_UP});
+Decimal.set({ precision: 10, rounding: Decimal.ROUND_HALF_UP });

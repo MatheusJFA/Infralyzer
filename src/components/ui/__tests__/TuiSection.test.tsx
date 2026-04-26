@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen} from '@testing-library/react';
-import { describe, it, expect} from 'vitest';
-import { TuiSection} from '../TuiSection';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { TuiSection } from '../TuiSection';
 
 describe('TuiSection Component', () => {
   it('should render children and optional title', () => {

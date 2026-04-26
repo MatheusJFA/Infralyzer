@@ -75,22 +75,22 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
 
       const drawTable = (title: string, headers: string[], data: string[][], startY: number) => {
         let y = checkPageBreak(startY, 30);
-        
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
         doc.text(`[ ${title.toUpperCase()} ]`, 14, y);
-        
+
         y += 6;
         const rowHeight = 7;
         const startX = 14;
         const tableWidth = 182;
         const colWidth = tableWidth / headers.length;
-        
+
         // Table Header
         doc.setFillColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
         doc.rect(startX, y, tableWidth, rowHeight, "F");
-        
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(9);
         doc.setTextColor(255, 255, 255);
@@ -99,9 +99,9 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
           doc.text(h.toUpperCase(), currX, y + 4.5);
           currX += colWidth;
         });
-        
+
         y += rowHeight;
-        
+
         // Table Content
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
@@ -113,7 +113,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
             if (split.length > maxLines) maxLines = split.length;
             return split;
           });
-          
+
           const actualRowHeight = Math.max(7, (maxLines * 4.5) + 2);
           y = checkPageBreak(y, actualRowHeight);
 
@@ -121,7 +121,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
           doc.setFillColor(idx % 2 === 0 ? 255 : 250, 251, idx % 2 === 0 ? 255 : 253);
           doc.setDrawColor(LINE_LIGHT[0], LINE_LIGHT[1], LINE_LIGHT[2]);
           doc.rect(startX, y, tableWidth, actualRowHeight, "FD");
-          
+
           doc.setTextColor(TEXT_MAIN[0], TEXT_MAIN[1], TEXT_MAIN[2]);
           rowSplits.forEach((splitContent) => {
             doc.text(splitContent, cx, y + 4.5);
@@ -129,7 +129,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
           });
           y += actualRowHeight;
         });
-        
+
         return y + 10;
       };
 
@@ -155,7 +155,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(TEXT_SUB[0], TEXT_SUB[1], TEXT_SUB[2]);
-        
+
         const metricsList = [
           `DAU: ${formatNumber(scenarioMetrics.DAU)}`,
           `RPS/USER: ${formatNumber(scenarioMetrics.RequestsPerUser)}`,
@@ -195,7 +195,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
         if (pricingData) {
           const { aws, azure, gcp, oracle, exchangeRate } = pricingData;
           yPos = checkPageBreak(yPos, 50);
-          
+
           doc.setFont("helvetica", "bold");
           doc.setFontSize(11);
           doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);
@@ -206,7 +206,7 @@ export function ExportPDFButton({ filename = "infralyze-report.pdf", metrics, sc
             doc.setFont("helvetica", "bold"); doc.setFontSize(10);
             doc.setTextColor(TEXT_MAIN[0], TEXT_MAIN[1], TEXT_MAIN[2]);
             doc.text(label, x, yPos);
-            
+
             const totalUSD = (cp.totalStorageGB * data.storage) + (cp.totalEgressGB * data.egress);
             doc.setFont("helvetica", "normal"); doc.setFontSize(9);
             doc.setTextColor(BLUEPRINT_BLUE[0], BLUEPRINT_BLUE[1], BLUEPRINT_BLUE[2]);

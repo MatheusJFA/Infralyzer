@@ -59,7 +59,7 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
         </h3>
       </div>
       <div className="border-b border-paper-outline/30 border-dashed w-full block mb-6 -mt-2"></div>
-      
+
       <div className="h-[250px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -68,24 +68,24 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
             barGap={4}
           >
             <CartesianGrid strokeDasharray="3 3" stroke={blueprintBlue} opacity={0.1} vertical={false} />
-            <XAxis 
-              dataKey="name" 
-              stroke={blueprintBlue} 
-              tick={{ fill: blueprintBlue, opacity: 0.8, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }} 
+            <XAxis
+              dataKey="name"
+              stroke={blueprintBlue}
+              tick={{ fill: blueprintBlue, opacity: 0.8, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
               axisLine={{ stroke: blueprintBlue, opacity: 0.3 }}
               tickLine={{ stroke: blueprintBlue, opacity: 0.3 }}
             />
-            <YAxis 
-              stroke={blueprintBlue} 
-              tick={{ fill: blueprintBlue, opacity: 0.8, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }} 
+            <YAxis
+              stroke={blueprintBlue}
+              tick={{ fill: blueprintBlue, opacity: 0.8, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
               axisLine={{ stroke: blueprintBlue, opacity: 0.3 }}
               tickLine={{ stroke: blueprintBlue, opacity: 0.3 }}
               tickFormatter={(val) => val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val}
             />
-            <Tooltip 
+            <Tooltip
               cursor={{ fill: 'hsl(var(--paper-primary) / 0.05)' }}
-              contentStyle={{ 
-                backgroundColor: tooltipBg, 
+              contentStyle={{
+                backgroundColor: tooltipBg,
                 border: `1px solid ${tooltipBorder}`,
                 color: blueprintBlue,
                 fontSize: '12px',
@@ -95,8 +95,8 @@ export function PeakComparisonChart({ metrics, projections }: PeakComparisonChar
               itemStyle={{ color: blueprintBlue }}
               formatter={(value: number) => Math.round(value).toLocaleString()}
             />
-            <Legend 
-              wrapperStyle={{ fontSize: '10px', fontFamily: "'JetBrains Mono', monospace", color: blueprintBlue }} 
+            <Legend
+              wrapperStyle={{ fontSize: '10px', fontFamily: "'JetBrains Mono', monospace", color: blueprintBlue }}
               iconType="square"
             />
             <Bar dataKey="Normal" name="Normal (PF 1.0)" fill={lightBlueprintBlue} stroke={blueprintBlue} strokeOpacity={0.5} />
