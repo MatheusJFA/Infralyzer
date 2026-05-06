@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import { SECONDS_IN_DAY, DAYS_IN_MONTH, HOURS_IN_MONTH_AVG } from './constants';
+import { SECONDS_IN_DAY, DAYS_IN_MONTH } from './constants';
 
 export function calculateQPS(dau: number, reqPerUser: number): Decimal {
     const totalReqs = new Decimal(dau).mul(reqPerUser);

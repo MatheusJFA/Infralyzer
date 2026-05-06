@@ -31,7 +31,8 @@ describe('CostEstimation Component', () => {
     totalEgressGB: 50,
     avgQPS: 1,
     peakQPS: 2,
-    monthlyRequests: 2592000
+    readQPS: 0.8,
+    writeQPS: 0.2,
   };
 
   beforeEach(() => {

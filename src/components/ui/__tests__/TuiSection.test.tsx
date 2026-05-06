@@ -13,8 +13,8 @@ describe('TuiSection Component', () => {
   it('should apply base classes', () => {
     const { container } = render(<TuiSection>Base Section</TuiSection>);
     const section = container.firstChild as HTMLElement;
-    expect(section.className).toContain('bg-background');
-    expect(section.className).toContain('border-paper-outline');
+    expect(section.className).toContain('blueprint-card');
+    expect(section.className).toContain('w-full');
   });
 
   it('should apply additional class names', () => {

@@ -81,9 +81,9 @@ describe('Infralyze Formulas', () => {
 
         it('should return huge values for years of retention with high QPS', () => {
             const result = calculateMonthlyStorageGB(new Decimal(10000), 1024 * 1024, 365, 3);
-            // 10k QPS * 86400 * 1MB * 365 * 3
-            // ≈ 946,080,000,000,000 bytes / 1024^3 ≈ 881,103.5 GB
-            expect(result.toNumber()).toBeGreaterThan(800000);
+            // 10k QPS * 86400 writes/day * 1 MiB (1,048,576 bytes) * 365 days * 3x replication
+            // = 946,080,000,000 writes * 1,048,576 bytes / 1,073,741,824 (1024^3) ≈ 923,906,250 GB
+            expect(result.toNumber()).toBeCloseTo(923906250, -3);
         });
     });
 });
